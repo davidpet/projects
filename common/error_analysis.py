@@ -1,13 +1,7 @@
 import tensorflow as tf
 from typing import Dict
-import os
-import sys
 
-sys.path.append(os.path.dirname(os.path.abspath(__file__)))
-import visualization
-
-#import importlib
-#importlib.reload(visualization)
+import common.visualization as visualization
 
 def compute_error_analysis_matrices(data: tf.Tensor, labels: tf.Tensor, predictions: tf.Tensor) -> Dict[str, tf.Tensor]:
     """Compute the 4 error analysis matrices based on label and predictions.

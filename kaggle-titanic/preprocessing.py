@@ -1,11 +1,9 @@
 import os
-import sys
 import tensorflow as tf
 import pandas as pd
 import pickle
 from typing import Tuple
 
-sys.path.append('..')
 import common.datasets as datasets
 
 INPUT_FOLDER = '/mnt/p/Datasets/titanic'  # This will be different on kaggle
