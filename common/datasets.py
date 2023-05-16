@@ -19,14 +19,21 @@ def count_batches(dataset: tf.data.Dataset) -> int:
 def get_first_batch(dataset: tf.data.Dataset):
     """Get the first batch of the dataset.
 
+    All tensors are converted to numpy equivalents.
+    TODO: Consider not doing that (then need to update places using this)
+
     Args:
         dataset (tf.data.Dataset): The dataset.
 
     Returns:
         The first batch (whose type can vary).
+        None if empty dataset.
     """
 
-    return next(dataset.take(1).as_numpy_iterator())
+    try:
+        return next(dataset.take(1).as_numpy_iterator())
+    except StopIteration:
+        return None
 
 def show_first_batch(dataset: tf.data.Dataset) -> None:
     """Print the first batch of the dataset in a way that depends on types.
@@ -84,6 +91,7 @@ def safe_batch_transformer(transform_fn):
 
 def named_column_scaler(scalers: dict):
     """Get a function that can be passed into dataset.map() to apply scalers to columns in a batch dictionary."""
+
     def batch_column_scaler(batch: dict):
         new_batch = dict()
 
@@ -107,7 +115,12 @@ def named_column_scaler(scalers: dict):
 
 # TODO: Multi-column version of this (using this) to pass into map()
 def remap_column_entries(column_values, value_mappings):
-    """Take in a tf vector of values and transform using value_mappings dictionary."""
+    """Take in a tf vector of values and transform it using value_mappings dictionary (eg. for categories to numbers).
+    
+    For now, you can only map TO an integer value.
+    TODO: maybe fix that eventually if needed as it was not intentional (though might still make sense).
+    """
+
     keys = list(value_mappings.keys())
     values = [value_mappings[k] for k in keys]
     table = tf.lookup.StaticHashTable(tf.lookup.KeyValueTensorInitializer(keys, values), -1)
@@ -115,7 +128,14 @@ def remap_column_entries(column_values, value_mappings):
     return table.lookup(column_values)
 
 def named_column_oh_expander(one_hot_specs: dict):
-    """Get a function that can be passed into dataset.map() to expand given columns w/ given # categories into one-hot vectors."""
+    """Get a function that can be passed into dataset.map() to expand given columns w/ given # categories into one-hot vectors.
+    
+    Right now, only dictionary datasets are supported
+    TODO: expand support to tensor datasets
+
+    Negative numbers will become all zero vectors, as that is what TF does with them.
+    """
+
     def batch_expander(batch: dict):
         new_batch = dict()
 
@@ -162,7 +182,7 @@ def to_matrix(dtype=tf.float32):
     return safe_batch_transformer(batch_to_matrix)
 
 def collect_tensors(dataset: tf.data.Dataset):
-    """Aggregate all the items in an array-like dataset into a single tensor in memory.
+    """Aggregate all the items in an array-like dataset (no batch dimension) into a single tensor in memory.
     
     If labels are present in the dataset, you will get back a tuple with two tensors.
     This is especially useful for error analysis when you need model.predict output to be in the same order

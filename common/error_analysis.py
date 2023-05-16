@@ -7,14 +7,15 @@ def compute_error_analysis_matrices(data: tf.Tensor, labels: tf.Tensor, predicti
     """Compute the 4 error analysis matrices based on label and predictions.
 
     Args:
-        data (tf.Tensor): The input data that will be sliced according to the values of labels and predictions.
-        labels (tf.Tensor): The labels for dataset samples.  Shape is (num_samples). Values should be 0 or 1.
+        data (tf.Tensor): The unbatched input data that will be sliced according to the values of labels and predictions.
+        labels (tf.Tensor): The labels for dataset samples.  Shape is (num_samples) (will get reshaped). Values should be 0 or 1.
         predictions (tf.Tensor): The actual output from the model. Shape can be (num_samples) or whatever TF returns (will get reshaped).  Values should be 0 or 1.
     Returns:
         Dictionary of 4 tensors.  Keys are true_positives, true_negatives, false_positives, and false_negatives.
+        Missing ones will have shape (0, num_features).
     """
-    true_mask = labels == tf.reshape(predictions, (-1,))
-    positive_mask = labels == 1
+    true_mask = (tf.reshape(labels, (-1)) == tf.reshape(predictions, (-1)))
+    positive_mask = (predictions == 1)
 
     tp_mask = true_mask & positive_mask
     tn_mask = true_mask & ~positive_mask

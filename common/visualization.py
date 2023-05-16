@@ -4,7 +4,7 @@ import tensorflow as tf
 import numpy as np
 from typing import Union
 
-def examine_candidate_column(dataframe: pd.DataFrame, candidate_column: str, candidate_display_name: str, label_column: str, label_display_name: str) -> None:
+def examine_candidate_column(dataframe: pd.DataFrame, candidate_column: str, candidate_display_name: str, label_column: str, label_display_name: str, test_series_fn = None) -> None:
     """Plot a graph of % of label true for values of a candidate column using matplotlib.
 
     Args:
@@ -13,13 +13,17 @@ def examine_candidate_column(dataframe: pd.DataFrame, candidate_column: str, can
         candidate_display_name (str): Display name for candidate column in the plot.
         label_column (str): The target value (y-axis) - assumed to be 0 or 1.
         label_display_name (str): Display name for label column in the plot.
+        test_series_fn: For testing only - a function that will be called with the pd.Series object that will be plotted. (needed because mocking inaccessible instance methods not working)
 
     Returns:
         None
     """
 
-    ax = (dataframe.groupby(candidate_column)[label_column].mean() * 100).plot(kind='bar')
+    series = dataframe.groupby(candidate_column)[label_column].mean() * 100
+    if test_series_fn:
+        test_series_fn(series)
 
+    ax = series.plot(kind='bar')
     ax.set_xlabel(f'{candidate_display_name} ({candidate_column})')
     ax.set_ylabel(f'% {label_display_name}')
 
@@ -40,8 +44,8 @@ def compute_truth_ratio(dataframe: pd.DataFrame, label_column: str) -> float:
     num_true = len(dataframe[dataframe[label_column] != 0])
     return num_true / len(dataframe)
 
-# TODO: Handle lack of val_accuracy field if that ever comes up
-def graph_training_stats(history):
+# TODO: Handle lack of val_accuracy field in history if that ever comes up
+def graph_training_stats(history) -> None:
     """Plot the training loss and accuracy per epoch from the return value of model.fit."""
 
     plt.figure(figsize=(10,12))
@@ -74,6 +78,10 @@ def print_matrix(matrix: Union[tf.Tensor, np.ndarray]) -> None:
         np_matrix = matrix.numpy()
     else:
         np_matrix = matrix
+    
+    if len(np_matrix.shape) == 0:
+        print()
+        return
     
     for i in range(np_matrix.shape[0]):
         for j in range(np_matrix.shape[1]):

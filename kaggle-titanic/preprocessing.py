@@ -6,6 +6,9 @@ from typing import Tuple
 
 import common.datasets as datasets
 
+# TODO: consider making tests for this file.
+# If it were a production pipeline it would be essential, but it's not as urgent since it's a notebook I will only use for a little bit longer.
+
 INPUT_FOLDER = '/mnt/p/Datasets/titanic'  # This will be different on kaggle
 TRAINING_DATA = os.path.join(INPUT_FOLDER, 'train.csv')
 TEST_DATA = os.path.join(INPUT_FOLDER, 'test.csv')
