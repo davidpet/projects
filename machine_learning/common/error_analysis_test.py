@@ -2,8 +2,8 @@ from unittest.mock import patch
 
 import tensorflow as tf
 
-import common.error_analysis as error_analysis
-import common.visualization as visualization
+import machine_learning.common.error_analysis as error_analysis
+import machine_learning.common.visualization as visualization
 
 class ErrorAnalysisTests(tf.test.TestCase):
     def __init__(self, methodName='runTest'):
@@ -84,7 +84,7 @@ class ErrorAnalysisTests(tf.test.TestCase):
         ]
 
         with patch('builtins.print', new=self.make_fake_print()):
-            with patch('common.visualization.print_matrix', new=self.make_fake_print_matrix()):
+            with patch('machine_learning.common.visualization.print_matrix', new=self.make_fake_print_matrix()):
                 error_analysis.print_error_analysis_matrices(matrices)
 
         # Have to do this manually because self.assertAllEqual fails and I'm not sure why

@@ -4,7 +4,7 @@ import tensorflow as tf
 import numpy as np
 from sklearn.preprocessing import StandardScaler
 
-import common.datasets as datasets
+import machine_learning.common.datasets as datasets
 
 # TODO: consider mocking TF datasets?
 class DatasetsTests(tf.test.TestCase):

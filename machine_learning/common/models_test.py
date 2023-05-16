@@ -1,6 +1,6 @@
 import tensorflow as tf
 
-import common.models as models
+import machine_learning.common.models as models
 
 class ModelsTests(tf.test.TestCase):
     def test_create_basic_ffn_logistic_regression(self):

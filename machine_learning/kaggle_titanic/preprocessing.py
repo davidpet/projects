@@ -4,7 +4,7 @@ import pandas as pd
 import pickle
 from typing import Tuple
 
-import common.datasets as datasets
+import machine_learning.common.datasets as datasets
 
 # TODO: consider making tests for this file.
 # If it were a production pipeline it would be essential, but it's not as urgent since it's a notebook I will only use for a little bit longer.

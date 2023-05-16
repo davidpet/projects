@@ -5,7 +5,7 @@ import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt # imported for mocking
 
-import common.visualization as visualization
+import machine_learning.common.visualization as visualization
 
 class VisualizationTests(tf.test.TestCase):
     class FakePlotAxis:

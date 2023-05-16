@@ -1,7 +1,7 @@
 import unittest
 from unittest.mock import patch
 
-import common.checks as checks
+import machine_learning.common.checks as checks
 
 class ChecksTests(unittest.TestCase):
     def __init__(self, methodName='runTest'):
