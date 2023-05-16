@@ -24,7 +24,7 @@ class VisualizationTests(tf.test.TestCase):
             self.history = history
 
     def __init__(self, methodName='runTest'):
-        super(VisualizationTests, self).__init__(methodName)
+        super().__init__(methodName)
 
         self.dataframe = pd.DataFrame([[1, 1, '3'], [1, 0, '6'], [3, 0, '9'], [4, 1, '12']], columns=['col1', 'col2', 'col3'])
 

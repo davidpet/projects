@@ -7,7 +7,7 @@ import machine_learning.common.visualization as visualization
 
 class ErrorAnalysisTests(tf.test.TestCase):
     def __init__(self, methodName='runTest'):
-        super(ErrorAnalysisTests, self).__init__(methodName)
+        super().__init__(methodName)
 
         self.tensor = tf.constant([
              [1, 2, 3],

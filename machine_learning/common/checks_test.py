@@ -5,7 +5,7 @@ import machine_learning.common.checks as checks
 
 class ChecksTests(unittest.TestCase):
     def __init__(self, methodName='runTest'):
-        super(ChecksTests, self).__init__(methodName)
+        super().__init__(methodName)
         self.printed = ''
 
     def make_fake_print(self):

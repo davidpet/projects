@@ -20,7 +20,7 @@ class DatasetsTests(tf.test.TestCase):
             self.partial_fit_objects.append(tensor)
             
     def __init__(self, methodName='runTest'):
-        super(DatasetsTests, self).__init__(methodName)
+        super().__init__(methodName)
 
         # 3 batches with 2 samples each, 3 feature columns
         self.tensor = tf.constant([
