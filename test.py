@@ -6,17 +6,17 @@ I'll use my own discovery so I can have the layout that is best for my projects.
 
 This depends on having PYTHONPATH set up as per the repo's README.
 
-Usage: python3 -m test '~/repos/ml-models/common'
-    This will run all tests found recursively in the common folder of ml-models.
+Usage: python3 -m test '~/repos/projects/common'
+    This will run all tests found recursively in the common folder of projects.
 Usage: python3 -m test
     This will run all tests found recursively in the whole repo.
-Usage: python3 -m test '~/repos/ml-models/common/checks_test.py'
+Usage: python3 -m test '~/repos/projects/common/checks_test.py'
     This will run a specific python test file.
-Usage: python3 -m test '~/repos/ml-models/common/checks'
+Usage: python3 -m test '~/repos/projects/common/checks'
     This will run checks_test.py because there's no 'checks' folder.
-Usage: python3 -m test '~/repos/ml-models/common/checks_test.py/MyTestClass'
+Usage: python3 -m test '~/repos/projects/common/checks_test.py/MyTestClass'
     This will run a specific class in a specific python file.
-Usage: python3 -m test '~/repos/ml-models/common/checks_test.py/MyTestClass.test_method1'
+Usage: python3 -m test '~/repos/projects/common/checks_test.py/MyTestClass.test_method1'
     This will run a specific method in a specific python file.
 """
 
