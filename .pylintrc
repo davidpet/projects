@@ -139,6 +139,7 @@ disable=abstract-method,
         unicode-builtin,
         unnecessary-pass,
         unpacking-in-except,
+        unspecified-encoding,  # MODIFIED BY DAVIDPET: for now I don't think this is necessary
         useless-else-on-loop,
         useless-object-inheritance,
         useless-suppression,
@@ -280,7 +281,8 @@ max-module-lines=99999
 # spaces.  Google's externaly-published style guide says 4, consistent with
 # PEP 8.  Here, we use 2 spaces, for conformity with many open-sourced Google
 # projects (like TensorFlow).
-indent-string='  '
+# MODIFIED BY DAVIDPET: 4 instead of 2 for consistency with yapf
+indent-string='    '
 
 # Number of spaces of indent required inside a hanging  or continued line.
 indent-after-paren=4

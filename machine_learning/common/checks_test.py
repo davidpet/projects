@@ -1,10 +1,13 @@
+"""Tests for checks.py."""
+
 import unittest
 from unittest.mock import patch
 
-import machine_learning.common.checks as checks
+from machine_learning.common import checks
 
 
 class ChecksTests(unittest.TestCase):
+    """Tests for checks.py"""
 
     def __init__(self, methodName='runTest'):
         super().__init__(methodName)

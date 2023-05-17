@@ -14,9 +14,9 @@ Usage: python3 -m test '~/repos/projects/common/checks_test.py'
     This will run a specific python test file.
 Usage: python3 -m test '~/repos/projects/common/checks'
     This will run checks_test.py because there's no 'checks' folder.
-Usage: python3 -m test '~/repos/projects/common/checks_test.py/MyTestClass'
+Usage: python3 -m test '~/repos/projects/common/checks_test.py/MyTests'
     This will run a specific class in a specific python file.
-Usage: python3 -m test '~/repos/projects/common/checks_test.py/MyTestClass.test_method1'
+Usage: python3 -m test '~/repos/projects/common/checks_test.py/MyTests.test_fn'
     This will run a specific method in a specific python file.
 """
 
@@ -27,7 +27,8 @@ from typing import List
 
 TEST_SUFFIX = '_test.py'
 
-# The folder containing this module should be in PYTHONPATH per repo setup instructions.
+# The folder containing this module should be in PYTHONPATH per repo setup
+# instructions.
 module_root = os.path.dirname(__file__)
 
 
@@ -75,17 +76,17 @@ def display_tests(tests: str) -> None:
 if __name__ == '__main__':
     if len(sys.argv) > 2:
         print('Usage: python3 -m test [root_or_file_path]/[method_name]')
-        exit(1)
+        sys.exit(1)
 
     search_path = module_root
     if len(sys.argv) > 1:
         search_path = sys.argv[1]
 
-    tests = find_tests(search_path)
-    display_tests(tests)
+    test_names = find_tests(search_path)
+    display_tests(test_names)
 
     loader = unittest.TestLoader()
-    suite = loader.loadTestsFromNames(tests)
+    suite = loader.loadTestsFromNames(test_names)
     runner = unittest.TextTestRunner()
 
     runner.run(suite)

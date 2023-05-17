@@ -1,12 +1,15 @@
+"""Tests for error_analysis.py."""
+
 from unittest.mock import patch
 
 import tensorflow as tf
 
-import machine_learning.common.error_analysis as error_analysis
-import machine_learning.common.visualization as visualization
+from machine_learning.common import error_analysis
+from machine_learning.common import visualization  # pylint: disable=unused-import  # Importing for mocking.
 
 
 class ErrorAnalysisTests(tf.test.TestCase):
+    """Tests for error_analysis.py."""
 
     def __init__(self, methodName='runTest'):
         super().__init__(methodName)
@@ -25,7 +28,7 @@ class ErrorAnalysisTests(tf.test.TestCase):
 
     def make_fake_print(self):
 
-        def fake_print(*args, **kwargs):
+        def fake_print(*args, **_):
             if len(args) > 0:
                 if args[0].startswith('['):
                     self.printed_objects.append(args[0][1:-1])
@@ -124,7 +127,8 @@ class ErrorAnalysisTests(tf.test.TestCase):
                        new=self.make_fake_print_matrix()):
                 error_analysis.print_error_analysis_matrices(matrices)
 
-        # Have to do this manually because self.assertAllEqual fails and I'm not sure why
+        # Have to do this manually because self.assertAllEqual fails and I'm
+        # not sure why.
         self.assertEqual(len(expected_prints), len(self.printed_objects))
         for i in range(len(expected_prints)):
             if isinstance(expected_prints[i], str):

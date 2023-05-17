@@ -1,9 +1,12 @@
+"""Tests for models.py."""
+
 import tensorflow as tf
 
-import machine_learning.common.models as models
+from machine_learning.common import models
 
 
 class ModelsTests(tf.test.TestCase):
+    """Tests for models.py."""
 
     def test_create_basic_ffn_logistic_regression(self):
         model = models.create_basic_ffn([1])

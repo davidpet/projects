@@ -1,16 +1,20 @@
+"""Tests for visualization.py."""
+
 from unittest.mock import patch
 
 import tensorflow as tf
 import numpy as np
 import pandas as pd
-import matplotlib.pyplot as plt  # imported for mocking
+import matplotlib.pyplot as plt  # pylint: disable=unused-import  # Imported for mocking.
 
-import machine_learning.common.visualization as visualization
+from machine_learning.common import visualization
 
 
 class VisualizationTests(tf.test.TestCase):
+    """Tests for visualization.py."""
 
     class FakePlotAxis:
+        """Fake ax objects from matplotlib to capture plotting activities."""
 
         def __init__(self):
             self.x_label = ''
@@ -24,6 +28,7 @@ class VisualizationTests(tf.test.TestCase):
             self.y_label = label
 
     class FakeHistory:
+        """Fake object returned by model.fit (simple wrapper)."""
 
         def __init__(self, history):
             self.history = history
@@ -42,8 +47,8 @@ class VisualizationTests(tf.test.TestCase):
     def capture_series(self, series: pd.Series):
         self.fake_plot_axis.series = series
 
-    def capture_plot(self, object):
-        self.plotted_objects.append(object)
+    def capture_plot(self, object_to_plot):
+        self.plotted_objects.append(object_to_plot)
 
     def capture_print(self, *kargs, **kwargs):
         if len(kargs) == 0:
@@ -57,9 +62,10 @@ class VisualizationTests(tf.test.TestCase):
         with patch.object(pd.Series, 'plot') as fake_plot:
             fake_plot.return_value = self.fake_plot_axis
 
-            visualization.examine_candidate_column(
-                self.dataframe, 'col1', 'Column 1', 'col2', 'Column 2',
-                lambda s: self.capture_series(s))
+            visualization.examine_candidate_column(self.dataframe, 'col1',
+                                                   'Column 1', 'col2',
+                                                   'Column 2',
+                                                   self.capture_series)
 
         fake_plot.assert_called_once_with(kind='bar')
         self.assertEqual(self.fake_plot_axis.x_label, 'Column 1 (col1)')
@@ -95,11 +101,11 @@ class VisualizationTests(tf.test.TestCase):
 
     def test_graph_training_stats(self):
         with patch('matplotlib.pyplot.plot') as fake_plot:
-            fake_plot.side_effect = lambda x: self.capture_plot(x)
+            fake_plot.side_effect = self.capture_plot
             with patch('matplotlib.pyplot.xlabel') as fake_xlabel:
-                fake_xlabel.side_effect = lambda x: self.capture_plot(x)
+                fake_xlabel.side_effect = self.capture_plot
                 with patch('matplotlib.pyplot.title') as fake_title:
-                    fake_title.side_effect = lambda x: self.capture_plot(x)
+                    fake_title.side_effect = self.capture_plot
                     visualization.graph_training_stats(
                         VisualizationTests.FakeHistory({
                             'loss': 'Loss Value',
@@ -120,8 +126,7 @@ class VisualizationTests(tf.test.TestCase):
 
     def test_print_matrix_with_tf(self):
         with patch('builtins.print') as fake_print:
-            fake_print.side_effect = lambda *args, **kargs: self.capture_print(
-                *args, **kargs)
+            fake_print.side_effect = self.capture_print
             visualization.print_matrix(tf.constant([[1, 2], [3, 4]]))
         self.assertAllEqual([
             '1',
@@ -138,8 +143,7 @@ class VisualizationTests(tf.test.TestCase):
 
     def test_print_matrix_with_np(self):
         with patch('builtins.print') as fake_print:
-            fake_print.side_effect = lambda *args, **kargs: self.capture_print(
-                *args, **kargs)
+            fake_print.side_effect = self.capture_print
             visualization.print_matrix(np.array([[1, 2], [3, 4]]))
         self.assertAllEqual([
             '1',
@@ -156,7 +160,6 @@ class VisualizationTests(tf.test.TestCase):
 
     def test_print_matrix_with_empty(self):
         with patch('builtins.print') as fake_print:
-            fake_print.side_effect = lambda *args, **kargs: self.capture_print(
-                *args, **kargs)
+            fake_print.side_effect = self.capture_print
             visualization.print_matrix(tf.zeros(shape=()))
         self.assertAllEqual(['newline'], self.printed_objects)

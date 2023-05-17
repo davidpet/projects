@@ -1,18 +1,23 @@
+"""Tests for datasets.py."""
+
 from unittest.mock import patch
 
 import tensorflow as tf
 import numpy as np
 from sklearn.preprocessing import StandardScaler
 
-import machine_learning.common.datasets as datasets
+from machine_learning.common import datasets
 
 
 # TODO: consider mocking TF datasets?
 class DatasetsTests(tf.test.TestCase):
+    """Tests for datasets.py."""
 
     class FakeScaler(StandardScaler):
+        """Fake StandardScaler to use in tests."""
 
         def __init__(self):
+            super().__init__()
             self.partial_fit_objects = []
 
         def transform(self, tensor):
@@ -43,9 +48,10 @@ class DatasetsTests(tf.test.TestCase):
             'field3': tf.constant([[3, -3], [6, -6], [9, -9]], tf.double),
         }
         self.first_dictionary_batch = {
-            key: self.dictionary[key][0] for key in self.dictionary
+            key: value[0] for key, value in self.dictionary.items()
         }
-        # result of turning self.dictionary into a tensor where columns are in same order as keys
+        # result of turning self.dictionary into a tensor where columns are in
+        # same order as keys
         self.tensorized_dictionary = [[[1., 2., 3.], [-1., -2., -3.]],
                                       [[4., 5., 6.], [-4., -5., -6.]],
                                       [[7., 8., 9.], [-7., -8., -9.]]]
