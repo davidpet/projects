@@ -4,7 +4,13 @@ import tensorflow as tf
 import numpy as np
 from typing import Union
 
-def examine_candidate_column(dataframe: pd.DataFrame, candidate_column: str, candidate_display_name: str, label_column: str, label_display_name: str, test_series_fn = None) -> None:
+
+def examine_candidate_column(dataframe: pd.DataFrame,
+                             candidate_column: str,
+                             candidate_display_name: str,
+                             label_column: str,
+                             label_display_name: str,
+                             test_series_fn=None) -> None:
     """Plot a graph of % of label true for values of a candidate column using matplotlib.
 
     Args:
@@ -30,6 +36,7 @@ def examine_candidate_column(dataframe: pd.DataFrame, candidate_column: str, can
     plt.xticks(rotation=0)
     plt.show()
 
+
 def compute_truth_ratio(dataframe: pd.DataFrame, label_column: str) -> float:
     """Get the ratio of rows in a dataframe that have a true label value.  If not 50%, the dataset is skewed.
 
@@ -44,11 +51,12 @@ def compute_truth_ratio(dataframe: pd.DataFrame, label_column: str) -> float:
     num_true = len(dataframe[dataframe[label_column] != 0])
     return num_true / len(dataframe)
 
+
 # TODO: Handle lack of val_accuracy field in history if that ever comes up
 def graph_training_stats(history) -> None:
     """Plot the training loss and accuracy per epoch from the return value of model.fit."""
 
-    plt.figure(figsize=(10,12))
+    plt.figure(figsize=(10, 12))
 
     plt.subplot(2, 2, 1)
     plt.plot(history.history['loss'])
@@ -70,6 +78,7 @@ def graph_training_stats(history) -> None:
     plt.tight_layout()
     plt.show()
 
+
 def print_matrix(matrix: Union[tf.Tensor, np.ndarray]) -> None:
     """Print the columns of a tensor/matrix with tabs in between, 1 sample per line.
     """
@@ -78,11 +87,11 @@ def print_matrix(matrix: Union[tf.Tensor, np.ndarray]) -> None:
         np_matrix = matrix.numpy()
     else:
         np_matrix = matrix
-    
+
     if len(np_matrix.shape) == 0:
         print()
         return
-    
+
     for i in range(np_matrix.shape[0]):
         for j in range(np_matrix.shape[1]):
             print(np_matrix[i][j], end='\t')

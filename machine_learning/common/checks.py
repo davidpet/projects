@@ -1,5 +1,6 @@
 from termcolor import colored
 
+
 def check_condition(condition: bool, prefix: str) -> None:
     """Test whether a condition is true or false and print a formatted result.
 

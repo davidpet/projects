@@ -3,7 +3,10 @@ from typing import Dict
 
 import machine_learning.common.visualization as visualization
 
-def compute_error_analysis_matrices(data: tf.Tensor, labels: tf.Tensor, predictions: tf.Tensor) -> Dict[str, tf.Tensor]:
+
+def compute_error_analysis_matrices(
+        data: tf.Tensor, labels: tf.Tensor,
+        predictions: tf.Tensor) -> Dict[str, tf.Tensor]:
     """Compute the 4 error analysis matrices based on label and predictions.
 
     Args:
@@ -28,6 +31,7 @@ def compute_error_analysis_matrices(data: tf.Tensor, labels: tf.Tensor, predicti
         'false_positives': data[fp_mask],
         'false_negatives': data[fn_mask],
     }
+
 
 def print_error_analysis_matrices(matrices: dict) -> None:
     """Print dictionary of tensorflow tensors showing their keys as titles.

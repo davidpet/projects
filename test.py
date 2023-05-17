@@ -30,10 +30,12 @@ TEST_SUFFIX = '_test.py'
 # The folder containing this module should be in PYTHONPATH per repo setup instructions.
 module_root = os.path.dirname(__file__)
 
+
 def make_module_name(path: str) -> str:
     rel_path = os.path.relpath(path, module_root)
     return rel_path.replace('/', '.')
-    
+
+
 def find_tests(root: str) -> List[str]:
     root = os.path.expanduser(root)
 
@@ -62,26 +64,28 @@ def find_tests(root: str) -> List[str]:
 
     return tests
 
+
 def display_tests(tests: str) -> None:
     print(f'Test Files Found ({len(tests)}):')
     for test in tests:
         print(test)
     print()
-    
-if __name__=='__main__':
+
+
+if __name__ == '__main__':
     if len(sys.argv) > 2:
         print('Usage: python3 -m test [root_or_file_path]/[method_name]')
         exit(1)
-    
+
     search_path = module_root
     if len(sys.argv) > 1:
         search_path = sys.argv[1]
-    
+
     tests = find_tests(search_path)
     display_tests(tests)
 
     loader = unittest.TestLoader()
     suite = loader.loadTestsFromNames(tests)
     runner = unittest.TextTestRunner()
-    
+
     runner.run(suite)

@@ -3,6 +3,7 @@ import math
 from typing import Tuple
 from sklearn.preprocessing import StandardScaler
 
+
 @tf.autograph.experimental.do_not_convert
 def count_batches(dataset: tf.data.Dataset) -> int:
     """Count the number of batches in a dataset (by reading through all of them).
@@ -14,7 +15,8 @@ def count_batches(dataset: tf.data.Dataset) -> int:
         (int): The count.
     """
 
-    return dataset.reduce(0, lambda x,_: x + 1)
+    return dataset.reduce(0, lambda x, _: x + 1)
+
 
 def get_first_batch(dataset: tf.data.Dataset):
     """Get the first batch of the dataset.
@@ -35,6 +37,7 @@ def get_first_batch(dataset: tf.data.Dataset):
     except StopIteration:
         return None
 
+
 def show_first_batch(dataset: tf.data.Dataset) -> None:
     """Print the first batch of the dataset in a way that depends on types.
 
@@ -46,7 +49,7 @@ def show_first_batch(dataset: tf.data.Dataset) -> None:
     """
 
     batch = get_first_batch(dataset)
-    
+
     def print_inner_batch(batch):
         if isinstance(batch, dict):
             print(dict(batch))
@@ -61,7 +64,11 @@ def show_first_batch(dataset: tf.data.Dataset) -> None:
     else:
         print_inner_batch(batch)
 
-def split(dataset: tf.data.Dataset, num_batches:float, training_ratio:float = 0.8) -> Tuple[tf.data.Dataset, tf.data.Dataset]:
+
+def split(
+        dataset: tf.data.Dataset,
+        num_batches: float,
+        training_ratio: float = 0.8) -> Tuple[tf.data.Dataset, tf.data.Dataset]:
     """Split a dataset into a training and validation set.
 
     Args:
@@ -74,8 +81,9 @@ def split(dataset: tf.data.Dataset, num_batches:float, training_ratio:float = 0.
     """
 
     training_batches = int(math.floor(num_batches * training_ratio))
-    
+
     return (dataset.take(training_batches), dataset.skip(training_batches))
+
 
 def safe_batch_transformer(transform_fn):
     """ Get a function (for use in dataset.map) that preserves the label part (if applicable) and transforms the data part. """
@@ -86,8 +94,9 @@ def safe_batch_transformer(transform_fn):
             return new_batch
         else:
             return (new_batch, labels)
-        
+
     return wrapper_fn
+
 
 def named_column_scaler(scalers: dict):
     """Get a function that can be passed into dataset.map() to apply scalers to columns in a batch dictionary."""
@@ -99,19 +108,25 @@ def named_column_scaler(scalers: dict):
         # Otherwise, really weird things happen with tf.numpy_function.
         def scale_column(feature_vector, feature_name):
             # Need to use tf.numpy_function because we need to make feature_vector a numpy vector for StandardScaler.
-            return tf.numpy_function(lambda x: scalers[feature_name].transform(x), [feature_vector], tf.double)
+            return tf.numpy_function(
+                lambda x: scalers[feature_name].transform(x), [feature_vector],
+                tf.double)
 
         for feature_name in batch:
             feature_value = batch[feature_name]
             if feature_name in scalers:
                 feature_col_vector = tf.reshape(feature_value, (-1, 1))
-                scaled_feature_col_vector = scale_column(feature_col_vector, feature_name)
-                new_batch[feature_name] = tf.reshape(scaled_feature_col_vector, (-1,))
+                scaled_feature_col_vector = scale_column(
+                    feature_col_vector, feature_name)
+                new_batch[feature_name] = tf.reshape(scaled_feature_col_vector,
+                                                     (-1,))
             else:
                 new_batch[feature_name] = feature_value
 
         return new_batch
+
     return safe_batch_transformer(batch_column_scaler)
+
 
 # TODO: Multi-column version of this (using this) to pass into map()
 def remap_column_entries(column_values, value_mappings):
@@ -123,9 +138,11 @@ def remap_column_entries(column_values, value_mappings):
 
     keys = list(value_mappings.keys())
     values = [value_mappings[k] for k in keys]
-    table = tf.lookup.StaticHashTable(tf.lookup.KeyValueTensorInitializer(keys, values), -1)
+    table = tf.lookup.StaticHashTable(
+        tf.lookup.KeyValueTensorInitializer(keys, values), -1)
 
     return table.lookup(column_values)
+
 
 def named_column_oh_expander(one_hot_specs: dict):
     """Get a function that can be passed into dataset.map() to expand given columns w/ given # categories into one-hot vectors.
@@ -142,17 +159,21 @@ def named_column_oh_expander(one_hot_specs: dict):
         for feature in batch:
             feature_value = batch[feature]
             if feature in one_hot_specs:
-                new_batch[feature] = tf.one_hot(feature_value, one_hot_specs[feature])
+                new_batch[feature] = tf.one_hot(feature_value,
+                                                one_hot_specs[feature])
             else:
                 new_batch[feature] = feature_value
 
         return new_batch
+
     return safe_batch_transformer(batch_expander)
+
 
 def create_named_scalers(column_names: list) -> dict:
     """Create default feature scalers as a dictionary of column name to new scaler."""
-    
+
     return {name: StandardScaler() for name in column_names}
+
 
 # TODO: consider index version
 # TODO: consider multiple columns at once version since StandardScaler supports it
@@ -160,11 +181,13 @@ def train_named_scalers(scalers: dict, dataset: tf.data.Dataset) -> None:
     """Train dictionary of scalers (as returned by create_scalers) based on dictionary dataset."""
     for element in dataset:
         if isinstance(element, tuple):
-            batch,_ = element
+            batch, _ = element
         else:
             batch = element
         for column_name in scalers:
-            scalers[column_name].partial_fit(tf.reshape(batch[column_name], (-1, 1)).numpy())
+            scalers[column_name].partial_fit(
+                tf.reshape(batch[column_name], (-1, 1)).numpy())
+
 
 def to_matrix(dtype=tf.float32):
     """Get a function that can be passed into dataset.map() to turn a dictionary dataset into a tensor dataset.
@@ -174,12 +197,16 @@ def to_matrix(dtype=tf.float32):
 
     def batch_to_matrix(batch_dict):
         raw_tensors = list(batch_dict.values())
-        reshaped_tensors = list(map(lambda x: tf.expand_dims(x, axis=1) if x.shape.rank == 1 else x, raw_tensors))
-        compatible_tensors = list(map(lambda x: tf.cast(x, dtype), reshaped_tensors))
+        reshaped_tensors = list(
+            map(lambda x: tf.expand_dims(x, axis=1)
+                if x.shape.rank == 1 else x, raw_tensors))
+        compatible_tensors = list(
+            map(lambda x: tf.cast(x, dtype), reshaped_tensors))
 
         return tf.concat(compatible_tensors, axis=1)
 
     return safe_batch_transformer(batch_to_matrix)
+
 
 def collect_tensors(dataset: tf.data.Dataset):
     """Aggregate all the items in an array-like dataset (no batch dimension) into a single tensor in memory.
@@ -197,12 +224,12 @@ def collect_tensors(dataset: tf.data.Dataset):
         else:
             batch = element
             labels = None
-        
+
         if data_tensor == None:
             data_tensor = batch
         else:
             data_tensor = tf.concat([data_tensor, batch], axis=0)
-        
+
         if labels != None:
             if labels_tensor == None:
                 labels_tensor = labels
