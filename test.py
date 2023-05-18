@@ -23,7 +23,6 @@ Usage: python3 -m test '~/repos/projects/common/checks_test.py/MyTests.test_fn'
 import sys
 import os
 import unittest
-from typing import List
 
 TEST_SUFFIX = '_test.py'
 
@@ -37,7 +36,7 @@ def make_module_name(path: str) -> str:
     return rel_path.replace('/', '.')
 
 
-def find_tests(root: str) -> List[str]:
+def find_tests(root: str) -> list[str]:
     root = os.path.expanduser(root)
 
     tests = []

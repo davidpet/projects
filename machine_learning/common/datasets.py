@@ -2,7 +2,6 @@
 
 import tensorflow as tf
 import math
-from typing import Tuple
 from sklearn.preprocessing import StandardScaler
 
 
@@ -74,7 +73,7 @@ def show_first_batch(dataset: tf.data.Dataset) -> None:
 def split(
         dataset: tf.data.Dataset,
         num_batches: float,
-        training_ratio: float = 0.8) -> Tuple[tf.data.Dataset, tf.data.Dataset]:
+        training_ratio: float = 0.8) -> tuple[tf.data.Dataset, tf.data.Dataset]:
     """
     Split a dataset into a training and validation set.
 
@@ -110,13 +109,13 @@ def safe_batch_transformer(transform_fn):
     return wrapper_fn
 
 
-def named_column_scaler(scalers: dict):
+def named_column_scaler(scalers: dict[str, StandardScaler]):
     """
     Get a function that can be passed into dataset.map() to apply scalers
     to columns in a batch dictionary.
     """
 
-    def batch_column_scaler(batch: dict):
+    def batch_column_scaler(batch: dict[str, tf.Tensor]):
         new_batch = {}
 
         # This needs to be a function to capture feature_name by value in the
@@ -164,7 +163,7 @@ def remap_column_entries(column_values, value_mappings):
     return table.lookup(column_values)
 
 
-def named_column_oh_expander(one_hot_specs: dict):
+def named_column_oh_expander(one_hot_specs: dict[str, int]):
     """
     Get a function that can be passed into dataset.map() to expand given
     columns w/ given # categories into one-hot vectors.
@@ -176,7 +175,7 @@ def named_column_oh_expander(one_hot_specs: dict):
     TF does with them.
     """
 
-    def batch_expander(batch: dict):
+    def batch_expander(batch: dict[str, tf.Tensor]):
         new_batch = {}
 
         for feature in batch:
@@ -192,7 +191,7 @@ def named_column_oh_expander(one_hot_specs: dict):
     return safe_batch_transformer(batch_expander)
 
 
-def create_named_scalers(column_names: list) -> dict:
+def create_named_scalers(column_names: list[str]) -> dict[str, StandardScaler]:
     """
     Create default feature scalers as dictionary of column name to new scaler.
     """
@@ -203,7 +202,8 @@ def create_named_scalers(column_names: list) -> dict:
 # TODO: consider index version
 # TODO: consider multiple columns at once version since StandardScaler
 #       supports it
-def train_named_scalers(scalers: dict, dataset: tf.data.Dataset) -> None:
+def train_named_scalers(scalers: dict[str, StandardScaler],
+                        dataset: tf.data.Dataset) -> None:
     """
     Train dictionary of scalers (as returned by create_scalers) based on
     dictionary dataset.

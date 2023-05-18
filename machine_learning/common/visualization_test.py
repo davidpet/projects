@@ -5,13 +5,13 @@ from unittest.mock import patch
 import tensorflow as tf
 import numpy as np
 import pandas as pd
+import matplotlib
 import matplotlib.pyplot as plt  # pylint: disable=unused-import  # Imported for mocking.
 
-# Suppress popups during testing on Mac.
-import matplotlib
-matplotlib.use('Agg')
-
 from machine_learning.common import visualization
+
+# Suppress popups during testing on Mac.
+matplotlib.use('Agg')
 
 
 class VisualizationTests(tf.test.TestCase):

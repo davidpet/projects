@@ -4,7 +4,7 @@ import os
 import tensorflow as tf
 import pandas as pd
 import pickle
-from typing import Tuple
+from sklearn.preprocessing import StandardScaler
 
 from machine_learning.common import datasets
 
@@ -119,14 +119,14 @@ def extract_passenger_ids(batch):
     return tf.reshape(batch['PassengerId'], (-1, 1))
 
 
-def save_scalers(scalers: dict) -> None:
+def save_scalers(scalers: dict[str, StandardScaler]) -> None:
     """Save dictionary of scalers so the trained data can be reused later."""
 
     with open(SCALER_FILE, 'wb') as f:
         pickle.dump(scalers, f)
 
 
-def load_scalers() -> dict:
+def load_scalers() -> dict[str, StandardScaler]:
     """Load dictionary of scalers as saved by save_scalers."""
 
     with open(SCALER_FILE, 'rb') as f:
@@ -135,7 +135,7 @@ def load_scalers() -> dict:
 
 def prepare_training_data_for_model(
         batch_size=BIGGER_BATCH_SIZE
-) -> Tuple[tf.data.Dataset, tf.data.Dataset]:
+) -> tuple[tf.data.Dataset, tf.data.Dataset]:
     """
     Get training,validation dataset pair from CSV with all preprocessing
     applied.
@@ -156,7 +156,7 @@ def prepare_training_data_for_model(
 #       (or don't - this way is pretty clear).
 def prepare_test_data_for_model(
         batch_size=BIGGER_BATCH_SIZE
-) -> Tuple[tf.data.Dataset, tf.data.Dataset]:
+) -> tuple[tf.data.Dataset, tf.data.Dataset]:
     """
     Get dataset pair (passengerIds,inputTensor) from CSV with all
     preprocessing applied.

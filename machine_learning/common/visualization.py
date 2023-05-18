@@ -4,7 +4,6 @@ import matplotlib.pyplot as plt
 import pandas as pd
 import tensorflow as tf
 import numpy as np
-from typing import Union
 
 
 def examine_candidate_column(dataframe: pd.DataFrame,
@@ -92,7 +91,7 @@ def graph_training_stats(history) -> None:
     plt.show()
 
 
-def print_matrix(matrix: Union[tf.Tensor, np.ndarray]) -> None:
+def print_matrix(matrix: tf.Tensor | np.ndarray) -> None:
     """
     Print the columns of a tensor/matrix with tabs in between,
     1 sample per line.

@@ -1,14 +1,13 @@
 """Utilities for doing error analysis on model predictionss."""
 
 import tensorflow as tf
-from typing import Dict
 
 from machine_learning.common import visualization
 
 
 def compute_error_analysis_matrices(
         data: tf.Tensor, labels: tf.Tensor,
-        predictions: tf.Tensor) -> Dict[str, tf.Tensor]:
+        predictions: tf.Tensor) -> dict[str, tf.Tensor]:
     """
     Compute the 4 error analysis matrices based on label and predictions.
 
@@ -42,7 +41,7 @@ def compute_error_analysis_matrices(
     }
 
 
-def print_error_analysis_matrices(matrices: dict) -> None:
+def print_error_analysis_matrices(matrices: dict[str, tf.Tensor]) -> None:
     """Print dictionary of tensorflow tensors showing their keys as titles."""
 
     for title in matrices:
