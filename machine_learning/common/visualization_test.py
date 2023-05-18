@@ -7,6 +7,10 @@ import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt  # pylint: disable=unused-import  # Imported for mocking.
 
+# Suppress popups during testing on Mac.
+import matplotlib
+matplotlib.use('Agg')
+
 from machine_learning.common import visualization
 
 
