@@ -5,6 +5,7 @@ import tensorflow as tf
 from machine_learning.common import visualization
 
 
+# TODO: Maybe add tests for the reshaping since I already had a bug there.
 def compute_error_analysis_matrices(
         data: tf.Tensor, labels: tf.Tensor,
         predictions: tf.Tensor) -> dict[str, tf.Tensor]:
@@ -25,8 +26,10 @@ def compute_error_analysis_matrices(
 
         Missing ones will have shape (0, num_features).
     """
-    true_mask = (tf.reshape(labels, (-1)) == tf.reshape(predictions, (-1)))
-    positive_mask = predictions == 1
+    reshaped_labels = tf.reshape(labels, (-1))
+    reshaped_predictions = tf.reshape(predictions, (-1))
+    true_mask = reshaped_labels == reshaped_predictions
+    positive_mask = reshaped_predictions == 1
 
     tp_mask = true_mask & positive_mask
     tn_mask = true_mask & ~positive_mask
