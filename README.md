@@ -11,6 +11,7 @@
    - yapf
    - pylint
    - pytype (on hold until supports python 3.11)
+   - termcolor
 1. _PYTHONPATH_ set to the location of this repo so that you can import modules relative to it.
 1. _PYLINTRC_ set to the .pylintrc file in this repo (TODO: revisit this procedure later).
 
