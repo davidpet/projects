@@ -1,3 +1,14 @@
 .ipynb_checkpoints
 __pycache__
 *.pyc
+*~
+bazel-*
+.idea
+.vscode
+# Eclipse
+.project
+.classpath
+.settings/
+# Maven
+target/
+.ijwb

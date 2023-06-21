@@ -64,7 +64,8 @@ class DatasetsTests(tf.test.TestCase):
         def make_dictionary_dataset(dictionary_of_tensors):
             return {
                 key:
-                tf.data.Dataset.from_tensor_slices(dictionary_of_tensors[key])
+                    tf.data.Dataset.from_tensor_slices(
+                        dictionary_of_tensors[key])
                 for key in dictionary_of_tensors
             }
 
@@ -283,8 +284,9 @@ class DatasetsTests(tf.test.TestCase):
             'field2': [[0, 0, 1, 0, 0, 0, 0, 0], [0] * 8],
             'field3': [[0, 0, 0, 1, 0, 0, 0, 0, 0], [0] * 9],
         }
-        dataset = self.labeled_dictionary_dataset.map(
-            lambda d, l: ({k: tf.cast(d[k], tf.int32) for k in d}, l))
+        dataset = self.labeled_dictionary_dataset.map(lambda d, l: ({
+            k: tf.cast(d[k], tf.int32) for k in d
+        }, l))
 
         expander = datasets.named_column_oh_expander(one_hot_spec)
         actual = next(iter(dataset.map(expander)))
@@ -357,3 +359,7 @@ class DatasetsTests(tf.test.TestCase):
         self.assertAllEqual([[1, 2, 3], [4, 5, 6], [7, 8, 9], [10, 11, 12],
                              [13, 14, 15], [16, 17, 18]], tensor)
         self.assertAllEqual([1, 0, 0, 1, 1, 1], labels)
+
+
+if __name__ == '__main__':
+    tf.test.main()

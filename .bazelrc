@@ -1,0 +1,2 @@
+# By default, no failure information is shown.  That sucks.
+test --test_output=streamed

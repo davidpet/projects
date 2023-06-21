@@ -52,3 +52,7 @@ class ModelsTests(tf.test.TestCase):
 
         self.assertAllEqual([10, 5, 1], layer_units)
         self.assertAllEqual(['sigmoid', 'sigmoid', 'relu'], layer_activations)
+
+
+if __name__ == '__main__':
+    tf.test.main()

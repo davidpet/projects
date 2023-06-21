@@ -167,3 +167,7 @@ class VisualizationTests(tf.test.TestCase):
             fake_print.side_effect = self.capture_print
             visualization.print_matrix(tf.zeros(shape=()))
         self.assertAllEqual(['newline'], self.printed_objects)
+
+
+if __name__ == '__main__':
+    tf.test.main()

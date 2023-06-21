@@ -135,3 +135,7 @@ class ErrorAnalysisTests(tf.test.TestCase):
                 self.assertEqual(expected_prints[i], self.printed_objects[i])
             else:
                 self.assertAllEqual(expected_prints[i], self.printed_objects[i])
+
+
+if __name__ == '__main__':
+    tf.test.main()
