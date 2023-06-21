@@ -1,12 +1,12 @@
 SETUP_FOLDER="$(dirname "${BASH_SOURCE[0]}")"
+PROJECTS_FOLDER="$(dirname "$SETUP_FOLDER")"
 
 # Make my shared python libraries available to scripts and notebooks.
 # TODO: make this less system dependent
-export PYTHONPATH=~/repos/projects:$PYTHONPATH
+export PYTHONPATH=${PROJECTS_FOLDER}:$PYTHONPATH
 
 # Use my copy of the pylintrc file for pylint rc configuration.
-# TODO: make this less system dependent
-export PYLINTRC=~/repos/projects/.pylintrc
+export PYLINTRC=${PROJECTS_FOLDER}/.pylintrc
 
 # Format given .py files.
 function format-python() {
