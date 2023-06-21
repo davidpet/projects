@@ -1,3 +1,6 @@
-# TODO: implement
+SCRIPT_DIR="$(dirname "${BASH_SOURCE[0]}")"
+source "${SCRIPT_DIR}/../../setup/python-tools.sh"
 
-echo "WARNING: Linting python not implemented yet!"
+echo "Linting Python Files: $@"
+
+lint-python "$@"
