@@ -1,6 +1,8 @@
 """
 Discovers and runs tests (files ending with _test.py) relative to a folder.
 
+NOTE: this is deprecated for now because bazel can find all the test targets.
+
 Because discovery in unittest is picky about how things are laid out,
 I'll use my own discovery so I can have the layout that is best for my projects.
 
