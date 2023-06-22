@@ -2,6 +2,8 @@
 # the following dependencies:
 #    (ai) conda environment (with a lot of packages included)
 
+load("@rules_python//python:packaging.bzl", "py_package", "py_wheel")
+
 package(default_visibility = ["//visibility:public"])
 
 py_library(
@@ -68,5 +70,26 @@ test_suite(
         ":error_analysis_test",
         ":models_test",
         ":visualization_test",
+    ],
+)
+
+py_package(
+    name = "all_libs",
+    deps = [
+        ":checks_lib",
+        ":datasets_lib",
+        ":error_analysis_lib",
+        ":models_lib",
+        ":visualization_lib",
+    ],
+)
+
+py_wheel(
+    name = "all_libs_wheel",
+    distribution = "example_minimal_library",
+    python_tag = "py3",
+    version = "0.0.1",
+    deps = [
+        ":all_libs",
     ],
 )
