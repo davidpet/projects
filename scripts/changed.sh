@@ -15,10 +15,12 @@ repo_root=$(git rev-parse --show-toplevel)
 unstaged_files=$(git diff --name-only --diff-filter=d | sed "s|^|${repo_root}/|")
 # Get the list of files that have been staged for the next commit
 staged_files=$(git diff --name-only --cached | sed "s|^|${repo_root}/|")
+# Get the list of untracked files in the working directory
+untracked_files=$(git ls-files --others --exclude-standard | sed "s|^|${repo_root}/|")
 
 # Step 2: Deduplicate the list of files
 # Combine the lists, remove empty lines, and deduplicate
-all_files=$(echo -e "${unstaged_files}\n${staged_files}" | grep -v '^$' | sort -u)
+all_files=$(echo -e "${unstaged_files}\n${staged_files}\n${untracked_files}" | grep -v '^$' | sort -u)
 if [[ -z "$all_files" ]]; then
     echo "No files have changed. Nothing to do."
     exit 0
@@ -42,7 +44,7 @@ typescript_format_script="${FILETYPES_DIR}/format_typescript.sh"
 java_format_script="${FILETYPES_DIR}/format_java.sh"
 
 # File types to exclude from the warning
-excluded_file_types=("txt")  # Add any file types you want to exclude from the warning
+excluded_file_types=("txt sh proto")  # Add any file types you want to exclude from the warning
 
 # Aggregate errors
 errors=""
@@ -58,6 +60,12 @@ while IFS= read -r file; do
             python_files+=("$file")
             ;;
         ts)
+            typescript_files+=("$file")
+            ;;
+        json)
+            typescript_files+=("$file")
+            ;;
+        js)
             typescript_files+=("$file")
             ;;
         java)
