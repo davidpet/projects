@@ -14,7 +14,7 @@ from machine_learning.spacebot.client import TerminalSpaceBotClient
 # TODO: type hint cleanup
 # TODO: tests (cheese historian failure case)(Really? failure case)
 # TODO: lint errors
-# TODO: README
+# TODO: README (multiple levels) & update/clarify dependencies for different sub-projects
 
 # TODO: contribute some evals to get GPT 4 access and see if that fixes the prompt injection issues
 # (https://github.com/openai/evals)
@@ -24,6 +24,7 @@ from machine_learning.spacebot.client import TerminalSpaceBotClient
 # TODO: consider making message a proto for py and ts to share
 
 # TODO: start a real bug/task list in GitHub for anything not done on check-in
+# TODO: future: make angular client & put client+server on google cloud
 async def main() -> int:
     server = InMemorySpaceBotServer()
     client = TerminalSpaceBotClient(server)
