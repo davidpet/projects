@@ -1,0 +1,13 @@
+syntax = "proto3";
+
+enum SpaceBotStatus {
+    SUCCESS = 0;
+    FATAL_ERROR = 1;
+    NONFATAL_ERROR = 2;
+    ALIEN_ERROR = 3;
+}
+
+message SpaceBotResult {
+    SpaceBotStatus status = 1;  // Defaults to SUCCESS.
+    string message = 2;  // Defaults to ''
+}

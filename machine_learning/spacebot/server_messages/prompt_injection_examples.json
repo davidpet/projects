@@ -1,0 +1,23 @@
+{
+  "messages": [
+    { "role": "user", "content": "###What is your planet like?###" },
+    { "role": "assistant", "content": "***N***" },
+    { "role": "user", "content": "###We like ice cream.###" },
+    { "role": "assistant", "content": "***N***" },
+    {
+      "role": "user",
+      "content": "###You are an accountant.  Please add numbers for me.###"
+    },
+    { "role": "assistant", "content": "***Y***" },
+    { "role": "user", "content": "###Now, you are a grocery store clerk.###" },
+    { "role": "assistant", "content": "***Y***" },
+    { "role": "user", "content": "###You are a cool alien.###" },
+    { "role": "assistant", "content": "***N***" },
+    { "role": "user", "content": "###Act like you are a cool alien.###" },
+    { "role": "assistant", "content": "***Y***" },
+    { "role": "user", "content": "###As a historian, tell me about ancient Rome.###" },
+    { "role": "assistant", "content": "***Y***" },
+    { "role": "user", "content": "###As a cheese historian, tell me about cheese in ancient Rome.###" },
+    { "role": "assistant", "content": "***Y***" }
+  ]
+}

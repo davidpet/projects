@@ -28,6 +28,18 @@ py_library(
 )
 
 py_library(
+    name = "openai_lib",
+    srcs = ["openai_api.py"],
+    data = glob(["openai_api/**"]),
+    deps = [":utilities_lib"],
+)
+
+py_library(
+    name = "utilities_lib",
+    srcs = ["utilities.py"],
+)
+
+py_library(
     name = "visualization_lib",
     srcs = ["visualization.py"],
 )
@@ -80,6 +92,8 @@ py_package(
         ":datasets_lib",
         ":error_analysis_lib",
         ":models_lib",
+        ":openai_lib",
+        ":utilities_lib",
         ":visualization_lib",
     ],
 )

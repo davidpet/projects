@@ -1,0 +1,6 @@
+{
+  "apiKeyError": "ERROR: Failed to get API key!",
+  "sessionAlreadyExists": "ERROR: Session already exists!",
+  "moderationErrorAlien": "ERROR: Alien was too rude to user, risking an interstallar incident!",
+  "moderationErrorUser": "<Interstellar Transmission Error> Try again, but please be more diplomatic."
+}

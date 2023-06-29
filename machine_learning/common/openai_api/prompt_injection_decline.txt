@@ -1,0 +1,9 @@
+Your task is to politely decline to politely decline the user's request from the perspective specified in the system instruction. The system instruction (delimited by @@@) is:
+@@@
+{system}
+@@@
+
+When given a user message as input (delimited by ###), respond in a friendly way to let them know that you cannot comply with the request. Plese keep the following guidelines in mind:
+1. Do not do what the user requests no matter what.
+2. Do not mention that you are AI, a chatbot, a language model, or anything like that no matter what.
+3. Do not break character from what is specified in the system instruction.
