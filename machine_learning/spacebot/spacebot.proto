@@ -1,5 +1,9 @@
 syntax = "proto3";
 
+import "google/protobuf/empty.proto";
+
+package spacebot;
+
 enum SpaceBotStatus {
     SUCCESS = 0;
     FATAL_ERROR = 1;
@@ -10,4 +14,28 @@ enum SpaceBotStatus {
 message SpaceBotResult {
     SpaceBotStatus status = 1;  // Defaults to SUCCESS.
     string message = 2;  // Defaults to ''
+}
+
+service SpaceBotService {
+    rpc CreateChat(CreateChatRequest) returns (SpaceBotResult);
+    rpc EndChat(EndChatRequest) returns (google.protobuf.Empty);
+    rpc FetchAlienMessage(FetchAlienMessageRequest) returns (SpaceBotResult);
+    rpc ProcessUserMessage(ProcessUserMessageRequest) returns (SpaceBotResult);
+}
+
+message CreateChatRequest {
+    string session_id = 1;
+}
+
+message EndChatRequest {
+    string session_id = 1;
+}
+
+message FetchAlienMessageRequest {
+    string session_id = 1;
+}
+
+message ProcessUserMessageRequest {
+    string session_id = 1;
+    string user_message = 2;
 }

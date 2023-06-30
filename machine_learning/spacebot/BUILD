@@ -4,6 +4,7 @@ load("@rules_proto_grpc//python:defs.bzl", "python_proto_library")
 proto_library(
     name = "spacebot_proto",
     srcs = ["spacebot.proto"],
+    deps = ["@com_google_protobuf//:empty_proto"],
 )
 
 python_proto_library(
