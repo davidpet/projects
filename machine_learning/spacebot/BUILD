@@ -52,6 +52,9 @@ py_library(
 # run 'bazel-bin/machine_learning/spacebot/client' directly with above options.
 #
 # Hit enter to end the chat and terminate the client.
+#
+# NOTE: As long as they all use the same port as the server, you can run
+#       multiple clients at the same time (using the bazel-bin way).
 py_binary(
     name = "client",
     srcs = ["client.py"],
