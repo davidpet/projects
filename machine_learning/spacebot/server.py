@@ -1,16 +1,20 @@
 import threading
 import grpc
+import sys
+import time
+from concurrent import futures
 
 from machine_learning.common import utilities
 from machine_learning.common.openai_api import Chat, fetch_api_key, load_prompt_injection_declination_instructions, load_prompt_injection_instructions, meta_prompt, meta_prompt_y, moderation, moderation_flagged
 from machine_learning.common.openai_api import Examples, StringDictionary
+from machine_learning.spacebot.constants import DEFAULT_PORT
 
 import google.protobuf
 from machine_learning.spacebot.spacebot_pb2 import SpaceBotStatus, SpaceBotResult, CreateChatRequest, EndChatRequest, FetchAlienMessageRequest, ProcessUserMessageRequest
-from machine_learning.spacebot.spacebot_pb2_grpc import SpaceBotServiceServicer
+from machine_learning.spacebot.spacebot_pb2_grpc import SpaceBotServiceServicer, add_SpaceBotServiceServicer_to_server
 
 TEMPERATURE = 1.0
-
+DEFAULT_SERVER = 'localhost'
 
 class InMemorySpaceBotServer(SpaceBotServiceServicer):
     sessions: dict[str, Chat] = {}
@@ -126,3 +130,36 @@ class InMemorySpaceBotServer(SpaceBotServiceServicer):
 
         # Normal case.
         return SpaceBotResult()
+
+def main(port: str) -> int:
+    # Create a gRPC server
+    grpc_server = grpc.server(futures.ThreadPoolExecutor(max_workers=10))
+    server = InMemorySpaceBotServer(grpc_server)
+    
+    # Add the servicer to the server
+    add_SpaceBotServiceServicer_to_server(server, grpc_server)
+
+    # Listen on a port
+    grpc_server.add_insecure_port(f'{DEFAULT_SERVER}:{port}')
+
+    # Start the server
+    grpc_server.start()
+    try:
+        print()
+        print('Listening for client connections!')
+        print()
+        time.sleep(365*24*60*60)
+    except KeyboardInterrupt:
+        grpc_server.stop(0)
+        print()
+        print('Stopping Server!')
+        print()
+
+    return 0
+
+if __name__ == "__main__":
+    port = DEFAULT_PORT
+    if len(sys.argv) > 1:
+        port = sys.argv[1]
+    
+    sys.exit(main(port))

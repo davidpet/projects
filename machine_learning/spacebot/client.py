@@ -1,13 +1,16 @@
 import grpc
 import uuid
+import sys
 from termcolor import colored
 from typing import Callable
+
+from machine_learning.spacebot.constants import DEFAULT_PORT
 
 from machine_learning.spacebot.spacebot_pb2 import SpaceBotStatus, CreateChatRequest, FetchAlienMessageRequest, ProcessUserMessageRequest, EndChatRequest
 from machine_learning.spacebot.spacebot_pb2_grpc import SpaceBotServiceStub
 
 USER_INPUT_MSG = f'{colored("User:", "blue")} '
-
+DEFAULT_SERVER = 'localhost'
 
 class TerminalSpaceBotClient:
 
@@ -98,3 +101,20 @@ class TerminalSpaceBotClient:
 
         self._print_separator()
         return retcode
+
+def main(port: str) -> int:
+    client = TerminalSpaceBotClient(f'{DEFAULT_SERVER}:{port}')
+    client.initialize()
+    if client.valid:
+        retcode = client.run()
+    else:
+        retcode = 1
+
+    return retcode
+
+if __name__ == "__main__":
+    port = DEFAULT_PORT
+    if len(sys.argv) > 1:
+        port = sys.argv[1]
+    
+    sys.exit(main(port))
