@@ -17,6 +17,7 @@ from machine_learning.spacebot.spacebot_pb2_grpc import SpaceBotServiceServicer,
 TEMPERATURE = 1.0
 DEFAULT_SERVER = 'localhost'
 
+
 class InMemorySpaceBotServer(SpaceBotServiceServicer):
     sessions: dict[str, Chat] = {}
 
@@ -48,7 +49,8 @@ class InMemorySpaceBotServer(SpaceBotServiceServicer):
             'injection_decline'] = load_prompt_injection_declination_instructions(
             )
 
-    def CreateChat(self, request: CreateChatRequest, context: grpc.ServicerContext) -> SpaceBotResult:
+    def CreateChat(self, request: CreateChatRequest,
+                   context: grpc.ServicerContext) -> SpaceBotResult:
         if not self.valid:
             return SpaceBotResult(status=SpaceBotStatus.FATAL_ERROR,
                                   message=self.errors['apiKeyError'])
@@ -64,15 +66,15 @@ class InMemorySpaceBotServer(SpaceBotServiceServicer):
 
         return SpaceBotResult()
 
-    def EndChat(self, request: EndChatRequest, context: grpc.ServicerContext) -> google.protobuf.empty_pb2.Empty:
+    def EndChat(
+            self, request: EndChatRequest,
+            context: grpc.ServicerContext) -> google.protobuf.empty_pb2.Empty:
         with self.lock:
             if request.session_id in self.sessions:
                 del self.sessions[request.session_id]
         return google.protobuf.empty_pb2.Empty()
 
-    def _fetch_alien_msg(self,
-                               session_id: str,
-                               retries: int = 3) -> str | None:
+    def _fetch_alien_msg(self, session_id: str, retries: int = 3) -> str | None:
         with self.lock:
             chat = self.sessions[session_id]
 
@@ -86,7 +88,8 @@ class InMemorySpaceBotServer(SpaceBotServiceServicer):
                 return None
         return alien_msg
 
-    def FetchAlienMessage(self, request: FetchAlienMessageRequest, context: grpc.ServicerContext) -> SpaceBotResult:
+    def FetchAlienMessage(self, request: FetchAlienMessageRequest,
+                          context: grpc.ServicerContext) -> SpaceBotResult:
         alien_msg = self._fetch_alien_msg(request.session_id)
         if alien_msg:
             return SpaceBotResult(message=alien_msg)
@@ -107,7 +110,8 @@ class InMemorySpaceBotServer(SpaceBotServiceServicer):
         return SpaceBotResult(status=SpaceBotStatus.ALIEN_ERROR,
                               message=rejection_msg)
 
-    def ProcessUserMessage(self, request: ProcessUserMessageRequest, context: grpc.ServicerContext) -> SpaceBotResult:
+    def ProcessUserMessage(self, request: ProcessUserMessageRequest,
+                           context: grpc.ServicerContext) -> SpaceBotResult:
         with self.lock:
             chat = self.sessions[request.session_id]
 
@@ -124,7 +128,8 @@ class InMemorySpaceBotServer(SpaceBotServiceServicer):
                        examples=self.injection_examples,
                        fn=meta_prompt_y):
             #print('Prompt Injection Detected!')
-            rejection_msg_result = self._fetch_rejection_msg(request.user_message)
+            rejection_msg_result = self._fetch_rejection_msg(
+                request.user_message)
             if rejection_msg_result.status == SpaceBotStatus.ALIEN_ERROR:
                 chat.add_assistant_msg(rejection_msg_result.message)
             return rejection_msg_result
@@ -132,11 +137,12 @@ class InMemorySpaceBotServer(SpaceBotServiceServicer):
         # Normal case.
         return SpaceBotResult()
 
+
 def main(port: str) -> int:
     # Create a gRPC server
     grpc_server = grpc.server(futures.ThreadPoolExecutor(max_workers=10))
     server = InMemorySpaceBotServer(grpc_server)
-    
+
     # Add the servicer to the server
     add_SpaceBotServiceServicer_to_server(server, grpc_server)
 
@@ -147,9 +153,11 @@ def main(port: str) -> int:
     grpc_server.start()
     # Set up signalling from shell script.
     should_quit = False
+
     def set_should_quit(*args):
         nonlocal should_quit
         should_quit = True
+
     signal.signal(signal.SIGINT, set_should_quit)
     # Listen for client connections and signals.
     try:
@@ -173,9 +181,10 @@ def main(port: str) -> int:
 
     return 0
 
+
 if __name__ == "__main__":
     port = DEFAULT_PORT
     if len(sys.argv) > 1:
         port = sys.argv[1]
-    
+
     sys.exit(main(port))

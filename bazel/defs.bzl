@@ -10,7 +10,7 @@ def _python_grpc_library_impl(ctx):
     all_proto_files = []
     compiled_proto_files = []
     relative_compiled_proto_files = []
-    proto_roots = sets.make([ctx.bin_dir.path, '.'])
+    proto_roots = sets.make([ctx.bin_dir.path, "."])
     output_py_files = []
     dep_py_files = ctx.files.deps
 
@@ -23,26 +23,26 @@ def _python_grpc_library_impl(ctx):
         relative_compiled_proto_files.extend([paths.relativize(ds.path, paths.join(src[ProtoInfo].proto_source_root, ctx.label.package)) for ds in src[ProtoInfo].direct_sources])
         proto_roots = sets.union(proto_roots, sets.make(src[ProtoInfo].transitive_proto_path.to_list()))
 
-    print('davidpet: all_proto_files')
+    print("davidpet: all_proto_files")
     for proto_file in all_proto_files:
         print(proto_file.path)
-    print('davidpet: compiled_proto_files')
+    print("davidpet: compiled_proto_files")
     for proto_file in compiled_proto_files:
         print(proto_file.path)
-    print('davidpet: relative_compiled_proto_files')
+    print("davidpet: relative_compiled_proto_files")
     for proto_file in relative_compiled_proto_files:
         print(proto_file)
-    print('davidpet: proto_roots')
+    print("davidpet: proto_roots")
     for proto_root in sets.to_list(proto_roots):
         print(proto_root)
-    print('davidpet: dep_py_files')
+    print("davidpet: dep_py_files")
     for py_file in dep_py_files:
         print(py_file.path)
 
     for i in range(len(compiled_proto_files)):
         input = compiled_proto_files[i]
         rel_input = relative_compiled_proto_files[i]
-        
+
         if ctx.attr.generate_pb2:
             output_file_pb2 = ctx.actions.declare_file(paths.replace_extension(rel_input, "_pb2.py"))
             output_py_files.append(output_file_pb2)
@@ -50,12 +50,12 @@ def _python_grpc_library_impl(ctx):
             output_file_pb2_grpc = ctx.actions.declare_file(paths.replace_extension(rel_input, "_pb2_grpc.py"))
             output_py_files.append(output_file_pb2_grpc)
 
-    print('davidpet: output_py_files')
+    print("davidpet: output_py_files")
     for py_file in output_py_files:
         print(py_file.path)
 
     args = []
-    args.extend(['-m', 'grpc_tools.protoc'])
+    args.extend(["-m", "grpc_tools.protoc"])
     if ctx.attr.generate_pb2:
         args.append('--python_out="$(realpath "{}")"'.format(ctx.bin_dir.path))
     if ctx.attr.generate_pb2_grpc:
@@ -64,14 +64,14 @@ def _python_grpc_library_impl(ctx):
         args.append('--proto_path="$(realpath "{}")"'.format(proto_root))
     for proto in relative_compiled_proto_files:
         args.append('"{}"'.format(paths.join(ctx.label.package, proto)))
-    protoc_command = 'python3 ' + ' '.join(args)
-    print('davidpet: protoc command')
+    protoc_command = "python3 " + " ".join(args)
+    print("davidpet: protoc command")
     print(protoc_command)
 
     ctx.actions.run_shell(
         inputs = all_proto_files,
         outputs = output_py_files,
-        mnemonic = 'CondaProtoc',
+        mnemonic = "CondaProtoc",
         use_default_shell_env = True,
         command = """
             export HOME={0}
@@ -84,7 +84,7 @@ def _python_grpc_library_impl(ctx):
             conda activate {1}
 
             {2}
-        """.format(ctx.bin_dir.path, ctx.attr.conda, protoc_command)
+        """.format(ctx.bin_dir.path, ctx.attr.conda, protoc_command),
     )
 
     return [
@@ -109,7 +109,7 @@ python_grpc_library = rule(
     attrs = {
         "srcs": attr.label_list(providers = [ProtoInfo]),
         "deps": attr.label_list(providers = [DefaultInfo]),
-        "conda": attr.string(default='bazel-protoc'),
+        "conda": attr.string(default = "bazel-protoc"),
         "generate_pb2": attr.bool(default = True),
         "generate_pb2_grpc": attr.bool(default = True),
     },
@@ -137,7 +137,7 @@ def _package_local_impl(ctx):
             outputs = [output],
             command = 'cp "{}" "{}"'.format(src.path, output.path),
         )
-    
+
     return [
         DefaultInfo(files = depset(outputs)),
     ]

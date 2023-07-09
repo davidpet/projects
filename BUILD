@@ -1,6 +1,6 @@
 load("@com_github_bazelbuild_buildtools//buildifier:def.bzl", "buildifier")
 load("@rules_proto//proto:defs.bzl", "proto_library")
-load ("//bazel:defs.bzl", "python_grpc_library", "package_local")
+load("//bazel:defs.bzl", "package_local", "python_grpc_library")
 
 buildifier(
     name = "buildifier",
@@ -20,12 +20,12 @@ package_local(
 proto_library(
     name = "google_proto_lib",
     srcs = [":google_proto_files"],
-    visibility = ['//:__subpackages__'],
+    visibility = ["//:__subpackages__"],
 )
 
 # Make python files for the google protos.
 python_grpc_library(
     name = "google_python_grpc_proto_lib",
     srcs = [":google_proto_lib"],
-    visibility = ['//:__subpackages__'],
+    visibility = ["//:__subpackages__"],
 )

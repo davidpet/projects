@@ -12,6 +12,7 @@ from machine_learning.spacebot.spacebot_pb2_grpc import SpaceBotServiceStub
 USER_INPUT_MSG = f'{colored("User:", "blue")} '
 DEFAULT_SERVER = 'localhost'
 
+
 class TerminalSpaceBotClient:
 
     def __init__(self,
@@ -50,7 +51,8 @@ class TerminalSpaceBotClient:
         self._print(f'{entity_name} {text}')
 
     def _fetch_and_print_alien_msg(self) -> bool:
-        alien_msg_result = self.stub.FetchAlienMessage(FetchAlienMessageRequest(session_id=self.session))
+        alien_msg_result = self.stub.FetchAlienMessage(
+            FetchAlienMessageRequest(session_id=self.session))
         if alien_msg_result.status != SpaceBotStatus.SUCCESS:
             if alien_msg_result.message:
                 self._print(alien_msg_result.message)
@@ -59,7 +61,8 @@ class TerminalSpaceBotClient:
         return True
 
     def initialize(self) -> None:
-        creation_result = self.stub.CreateChat(CreateChatRequest(session_id=self.session))
+        creation_result = self.stub.CreateChat(
+            CreateChatRequest(session_id=self.session))
         if creation_result.status != SpaceBotStatus.SUCCESS:
             if creation_result.message:
                 self._print(creation_result.message)
@@ -81,7 +84,9 @@ class TerminalSpaceBotClient:
                     self._print_alien_msg('Goodbye!')
                     break
                 # Try to add the message
-                user_msg_result = self.stub.ProcessUserMessage(ProcessUserMessageRequest(session_id=self.session, user_message=user_msg))
+                user_msg_result = self.stub.ProcessUserMessage(
+                    ProcessUserMessageRequest(session_id=self.session,
+                                              user_message=user_msg))
                 if user_msg_result.status == SpaceBotStatus.ALIEN_ERROR:
                     self._print_alien_msg(user_msg_result.message)
                     continue
@@ -102,6 +107,7 @@ class TerminalSpaceBotClient:
         self._print_separator()
         return retcode
 
+
 def main(port: str) -> int:
     client = TerminalSpaceBotClient(f'{DEFAULT_SERVER}:{port}')
     client.initialize()
@@ -112,9 +118,10 @@ def main(port: str) -> int:
 
     return retcode
 
+
 if __name__ == "__main__":
     port = DEFAULT_PORT
     if len(sys.argv) > 1:
         port = sys.argv[1]
-    
+
     sys.exit(main(port))

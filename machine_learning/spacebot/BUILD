@@ -28,7 +28,7 @@
 # TODO: consider making message a proto for py and ts to share
 
 load("@rules_proto//proto:defs.bzl", "proto_library")
-load ("//bazel:defs.bzl", "python_grpc_library")
+load("//bazel:defs.bzl", "python_grpc_library")
 
 proto_library(
     name = "spacebot_proto",
@@ -66,8 +66,8 @@ py_binary(
     name = "client",
     srcs = ["client.py"],
     deps = [
-        ":spacebot_python_lib",
         ":spacebot_constants_lib",
+        ":spacebot_python_lib",
     ],
 )
 
@@ -76,7 +76,7 @@ py_binary(
 #
 # To use client and server at the same time, build instead of run and then
 # run 'bazel-bin/machine_learning/spacebot/server' directly with above options.
-# 
+#
 # ctrl-c will stop it the proper way while ctrl-z will force stop it.
 # Either way seems to release the port properly.
 py_binary(
@@ -84,8 +84,8 @@ py_binary(
     srcs = ["server.py"],
     data = glob(["server_messages/**"]),
     deps = [
-        ":spacebot_python_lib",
         ":spacebot_constants_lib",
+        ":spacebot_python_lib",
         "//machine_learning/common:openai_lib",
         "//machine_learning/common:utilities_lib",
     ],
