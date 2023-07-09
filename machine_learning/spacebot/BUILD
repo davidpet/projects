@@ -1,5 +1,4 @@
-# TODO: shell script for testing client and server at same time
-# TODO: print server calls to the console
+# TODO: print server calls to the console (be careful in shell script local case)
 # TODO: real server logging
 
 # TODO: put common stuff for future chatbots into common library

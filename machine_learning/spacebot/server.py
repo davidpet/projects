@@ -2,6 +2,7 @@ import threading
 import grpc
 import sys
 import time
+import signal
 from concurrent import futures
 
 from machine_learning.common import utilities
@@ -144,12 +145,27 @@ def main(port: str) -> int:
 
     # Start the server
     grpc_server.start()
+    # Set up signalling from shell script.
+    should_quit = False
+    def set_should_quit(*args):
+        nonlocal should_quit
+        should_quit = True
+    signal.signal(signal.SIGINT, set_should_quit)
+    # Listen for client connections and signals.
     try:
         print()
         print('Listening for client connections!')
         print()
-        time.sleep(365*24*60*60)
+        while not should_quit:
+            time.sleep(1)
+        # If quit from shell script, we need to raise the exception ourselves.
+        # If quit from ctrl-c in direct execution, it will already be raised.
+        raise KeyboardInterrupt
+    # This will get triggered either from direct ctrl-c or from shell script SIGINT.
     except KeyboardInterrupt:
+        print()
+        print('Received stop signal!')
+        print()
         grpc_server.stop(0)
         print()
         print('Stopping Server!')
