@@ -1,6 +1,16 @@
-# TODO: print server calls to the console (be careful in shell script local case)
-# TODO: real server logging
-
+# TODO: server logging (possibly to console but maybe not - consider the normal case and
+#       the run_local case)
+# TODO: angular app to serve as client
+#       - will require proxy to make gRPC into HTTP REST
+#       - will require library to do gRPC communication on Angular side (exists already)
+#       - need a way to configure server and port for the app on launch
+#       - then just need the components (eg. textbox and chat history)
+# TODO: simplest possible method of hosting this on Google Cloud for demonstration/test purposes
+#       it can get increasingly more realistic/sophisticated over time
+#       (eg. authorization, CI/CD, docker, serverless, etc. overall for the repo planned over time)
+#       (for now, don't get stuck on that stuff - get something up)
+#       (but make sure appropriate limits are in place at openai and google so don't get
+#        financially attacked)
 # TODO: put common stuff for future chatbots into common library
 
 # TODO: docstrings
@@ -8,6 +18,7 @@
 # TODO: tests (cheese historian failure case)(Really? failure case)
 # TODO: lint errors
 # TODO: README (multiple levels) & update/clarify dependencies for different sub-projects
+# TODO: start a real bug/task list in GitHub for anything not done on check-in
 
 # TODO: contribute some evals to get GPT 4 access and see if that fixes the prompt injection issues
 # (https://github.com/openai/evals)
@@ -15,9 +26,6 @@
 # TODO: consider getting multiple choices for prompt and using those (instead of re-fetch)
 # TODO: consider making an enum for role in messages
 # TODO: consider making message a proto for py and ts to share
-
-# TODO: start a real bug/task list in GitHub for anything not done on check-in
-# TODO: future: make angular client & put client+server on google cloud
 
 load("@rules_proto//proto:defs.bzl", "proto_library")
 load ("//bazel:defs.bzl", "python_grpc_library")
