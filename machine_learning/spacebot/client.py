@@ -1,19 +1,18 @@
-import asyncio
+import grpc
 import uuid
 from termcolor import colored
 from typing import Callable
 
-from machine_learning.spacebot.definitions import SpaceBotServer, SpaceBotClient
-
-from machine_learning.spacebot.spacebot_pb2 import SpaceBotStatus
+from machine_learning.spacebot.spacebot_pb2 import SpaceBotStatus, CreateChatRequest, FetchAlienMessageRequest, ProcessUserMessageRequest, EndChatRequest
+from machine_learning.spacebot.spacebot_pb2_grpc import SpaceBotServiceStub
 
 USER_INPUT_MSG = f'{colored("User:", "blue")} '
 
 
-class TerminalSpaceBotClient(SpaceBotClient):
+class TerminalSpaceBotClient:
 
     def __init__(self,
-                 server: SpaceBotServer,
+                 server_address: str,
                  input_fn: Callable[..., str] = None,
                  print_fn: Callable[[str], None] = None):
         self.valid = False
@@ -25,8 +24,9 @@ class TerminalSpaceBotClient(SpaceBotClient):
         self.input_fn = input_fn
         self.print_fn = print_fn
 
-        self.session = uuid.uuid4()
-        self.server = server
+        self.session = str(uuid.uuid4())
+        self.channel = grpc.insecure_channel(server_address)
+        self.stub = SpaceBotServiceStub(self.channel)
 
     def _print(self, text: str | None = None) -> None:
         if text is None:
@@ -46,8 +46,8 @@ class TerminalSpaceBotClient(SpaceBotClient):
         text = colored(msg, 'white')
         self._print(f'{entity_name} {text}')
 
-    async def _fetch_and_print_alien_msg(self) -> bool:
-        alien_msg_result = await self.server.fetch_alien_msg(self.session)
+    def _fetch_and_print_alien_msg(self) -> bool:
+        alien_msg_result = self.stub.FetchAlienMessage(FetchAlienMessageRequest(session_id=self.session))
         if alien_msg_result.status != SpaceBotStatus.SUCCESS:
             if alien_msg_result.message:
                 self._print(alien_msg_result.message)
@@ -55,20 +55,19 @@ class TerminalSpaceBotClient(SpaceBotClient):
         self._print_alien_msg(alien_msg_result.message)
         return True
 
-    async def initialize(self) -> None:
-        creation_result = await self.server.create_chat(self.session)
+    def initialize(self) -> None:
+        creation_result = self.stub.CreateChat(CreateChatRequest(session_id=self.session))
         if creation_result.status != SpaceBotStatus.SUCCESS:
             if creation_result.message:
                 self._print(creation_result.message)
             return
         self.valid = True
 
-    async def run(self) -> int:
+    def run(self) -> int:
         self._print_separator()
         retcode = 0
-
         # Get initial alien message.
-        if not await self._fetch_and_print_alien_msg():
+        if not self._fetch_and_print_alien_msg():
             retcode = 1
         else:
             while True:
@@ -79,8 +78,7 @@ class TerminalSpaceBotClient(SpaceBotClient):
                     self._print_alien_msg('Goodbye!')
                     break
                 # Try to add the message
-                user_msg_result = await self.server.process_user_msg(
-                    self.session, user_msg)
+                user_msg_result = self.stub.ProcessUserMessage(ProcessUserMessageRequest(session_id=self.session, user_message=user_msg))
                 if user_msg_result.status == SpaceBotStatus.ALIEN_ERROR:
                     self._print_alien_msg(user_msg_result.message)
                     continue
@@ -93,10 +91,10 @@ class TerminalSpaceBotClient(SpaceBotClient):
                     else:
                         continue
                 # Get next alien message if all is well.
-                if not await self._fetch_and_print_alien_msg():
+                if not self._fetch_and_print_alien_msg():
                     retcode = 1
                     break
-            await self.server.end_chat(self.session)
+            self.stub.EndChat(EndChatRequest(session_id=self.session))
 
         self._print_separator()
         return retcode

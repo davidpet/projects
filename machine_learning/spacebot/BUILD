@@ -14,15 +14,15 @@ python_grpc_library(
 )
 
 py_library(
-    name = "definitions_lib",
-    srcs = ["definitions.py", ":spacebot_python_proto"],
+    name = "spacebot_python_lib",
+    srcs = [":spacebot_python_proto"],
 )
 
 py_library(
     name = "client_lib",
     srcs = ["client.py"],
     deps = [
-        ":definitions_lib",
+        ":spacebot_python_lib",
     ],
 )
 
@@ -31,17 +31,20 @@ py_library(
     srcs = ["server.py"],
     data = glob(["server_messages/**"]),
     deps = [
-        ":definitions_lib",
+        ":spacebot_python_lib",
         "//machine_learning/common:openai_lib",
         "//machine_learning/common:utilities_lib",
     ],
 )
 
+# 'bazel run //machine_learning/spacebot' to use default port
+# 'bazel run //machine_learning/spacebot -- 8000' to use specific port
 py_binary(
     name = "spacebot",
     srcs = ["spacebot.py"],
     deps = [
         ":client_lib",
         ":server_lib",
+        ":spacebot_python_lib",
     ],
 )

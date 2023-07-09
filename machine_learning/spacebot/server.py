@@ -1,21 +1,23 @@
-import asyncio
-import uuid
+import threading
+import grpc
 
 from machine_learning.common import utilities
 from machine_learning.common.openai_api import Chat, fetch_api_key, load_prompt_injection_declination_instructions, load_prompt_injection_instructions, meta_prompt, meta_prompt_y, moderation, moderation_flagged
 from machine_learning.common.openai_api import Examples, StringDictionary
 
-from machine_learning.spacebot.definitions import SpaceBotServer
-from machine_learning.spacebot.spacebot_pb2 import SpaceBotStatus, SpaceBotResult
+import google.protobuf
+from machine_learning.spacebot.spacebot_pb2 import SpaceBotStatus, SpaceBotResult, CreateChatRequest, EndChatRequest, FetchAlienMessageRequest, ProcessUserMessageRequest
+from machine_learning.spacebot.spacebot_pb2_grpc import SpaceBotServiceServicer
 
 TEMPERATURE = 1.0
 
 
-class InMemorySpaceBotServer(SpaceBotServer):
+class InMemorySpaceBotServer(SpaceBotServiceServicer):
     sessions: dict[str, Chat] = {}
 
-    def __init__(self):
-        self.lock = asyncio.Lock()
+    def __init__(self, server: grpc.Server):
+        self.server = server
+        self.lock = threading.Lock()
 
         self.messages: StringDictionary = {}
         self.errors: StringDictionary = {}
@@ -41,52 +43,53 @@ class InMemorySpaceBotServer(SpaceBotServer):
             'injection_decline'] = load_prompt_injection_declination_instructions(
             )
 
-    async def create_chat(self, sessionId: uuid.UUID) -> SpaceBotResult:
+    def CreateChat(self, request: CreateChatRequest, context: grpc.ServicerContext) -> SpaceBotResult:
         if not self.valid:
             return SpaceBotResult(status=SpaceBotStatus.FATAL_ERROR,
                                   message=self.errors['apiKeyError'])
 
-        async with self.lock:
-            if sessionId in self.sessions:
+        with self.lock:
+            if request.session_id in self.sessions:
                 return SpaceBotResult(
                     status=SpaceBotStatus.FATAL_ERROR,
                     message=self.errors['sessionAlreadyExists'])
             chat = Chat(temperature=TEMPERATURE)
-            self.sessions[sessionId] = chat
+            self.sessions[request.session_id] = chat
         chat.add_system_msg(self.messages['system'])
 
         return SpaceBotResult()
 
-    async def end_chat(self, sessionId: uuid.UUID) -> None:
-        async with self.lock:
-            if sessionId in self.sessions:
-                del self.sessions[sessionId]
+    def EndChat(self, request: EndChatRequest, context: grpc.ServicerContext) -> google.protobuf.empty_pb2.Empty:
+        with self.lock:
+            if request.session_id in self.sessions:
+                del self.sessions[request.session_id]
+        return google.protobuf.empty_pb2.Empty()
 
-    async def _fetch_alien_msg(self,
-                               sessionId: uuid.UUID,
+    def _fetch_alien_msg(self,
+                               session_id: str,
                                retries: int = 3) -> str | None:
-        async with self.lock:
-            chat = self.sessions[sessionId]
+        with self.lock:
+            chat = self.sessions[session_id]
 
         alien_msg = chat.predict_assistant_msg()
         if moderation(alien_msg, fn=moderation_flagged):
             chat.remove_msg()
             retries -= 1
             if retries:
-                return self._fetch_alien_msg(sessionId, retries)
+                return self._fetch_alien_msg(session_id, retries)
             else:
                 return None
         return alien_msg
 
-    async def fetch_alien_msg(self, sessionId: uuid.UUID) -> SpaceBotResult:
-        alien_msg = await self._fetch_alien_msg(sessionId)
+    def FetchAlienMessage(self, request: FetchAlienMessageRequest, context: grpc.ServicerContext) -> SpaceBotResult:
+        alien_msg = self._fetch_alien_msg(request.session_id)
         if alien_msg:
             return SpaceBotResult(message=alien_msg)
         else:
             return SpaceBotResult(status=SpaceBotStatus.FATAL_ERROR,
                                   message=self.errors['moderationErrorAlien'])
 
-    async def _fetch_rejection_msg(self, user_msg: str) -> SpaceBotResult:
+    def _fetch_rejection_msg(self, user_msg: str) -> SpaceBotResult:
         rejection_msg = meta_prompt(user_msg=user_msg,
                                     meta_msg=self.messages['injection_decline'],
                                     system_msg=self.messages['system'],
@@ -99,25 +102,24 @@ class InMemorySpaceBotServer(SpaceBotServer):
         return SpaceBotResult(status=SpaceBotStatus.ALIEN_ERROR,
                               message=rejection_msg)
 
-    async def process_user_msg(self, sessionId: uuid.UUID,
-                               user_msg: str) -> SpaceBotResult:
-        async with self.lock:
-            chat = self.sessions[sessionId]
+    def ProcessUserMessage(self, request: ProcessUserMessageRequest, context: grpc.ServicerContext) -> SpaceBotResult:
+        with self.lock:
+            chat = self.sessions[request.session_id]
 
         # Reject message if moderation issue.
-        if moderation(user_msg, fn=moderation_flagged):
+        if moderation(request.user_message, fn=moderation_flagged):
             return SpaceBotResult(status=SpaceBotStatus.NONFATAL_ERROR,
                                   message=self.errors['moderationErrorUser'])
-        chat.add_user_msg(user_msg)
+        chat.add_user_msg(request.user_message)
 
         # Reject prompt injections.
-        if meta_prompt(user_msg=user_msg,
+        if meta_prompt(user_msg=request.user_message,
                        meta_msg=self.messages['injections'],
                        system_msg=self.messages['system'],
                        examples=self.injection_examples,
                        fn=meta_prompt_y):
             #print('Prompt Injection Detected!')
-            rejection_msg_result = await self._fetch_rejection_msg(user_msg)
+            rejection_msg_result = self._fetch_rejection_msg(request.user_message)
             if rejection_msg_result.status == SpaceBotStatus.ALIEN_ERROR:
                 chat.add_assistant_msg(rejection_msg_result.message)
             return rejection_msg_result

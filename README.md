@@ -14,6 +14,12 @@
    - termcolor
    - python_dotenv
    - openai
+   - grpcio (the conda version installed by tensorflow-deps - may have to manually reinstall it)
+   - protobuf (the conda version installed by tensorflow-deps - may have to manually reinstall it)
+   - NOTE: I am currently building the grpc stuff with the newest but using the older one to run it - that may cause issues
+     - there is no other way because grpcio-tools on conda doesn't support old grpcio
+     - if any issues are noted later, I might have to look into docker-izing specific parts of the repo or something
+       - or let some things be broken on Mac, which would get rid of these issues, but since I use my Mac a lot, that would suck
 1. a conda environment called `bazel-protoc` that has Python 3.11 and nothing installed but `conda install grpcio-tools`.
    - This is a hack that is needed due to dependency hell between grpcio-tools and tensorflow.
    - NOTE: You do not need to activate that environment yourself for any commands - the bazel rules will handle themselves.
