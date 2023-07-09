@@ -6,7 +6,7 @@ from machine_learning.common.openai_api import Chat, fetch_api_key, load_prompt_
 from machine_learning.common.openai_api import Examples, StringDictionary
 
 from machine_learning.spacebot.definitions import SpaceBotServer
-from machine_learning.spacebot.machine_learning.spacebot.spacebot_pb2 import SpaceBotStatus, SpaceBotResult
+from machine_learning.spacebot.spacebot_pb2 import SpaceBotStatus, SpaceBotResult
 
 TEMPERATURE = 1.0
 

@@ -5,7 +5,7 @@ from typing import Callable
 
 from machine_learning.spacebot.definitions import SpaceBotServer, SpaceBotClient
 
-from machine_learning.spacebot.machine_learning.spacebot.spacebot_pb2 import SpaceBotStatus
+from machine_learning.spacebot.spacebot_pb2 import SpaceBotStatus
 
 USER_INPUT_MSG = f'{colored("User:", "blue")} '
 

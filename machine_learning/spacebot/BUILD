@@ -1,22 +1,21 @@
 load("@rules_proto//proto:defs.bzl", "proto_library")
-load("@rules_proto_grpc//python:defs.bzl", "python_proto_library")
+load ("//bazel:defs.bzl", "python_grpc_library")
 
 proto_library(
     name = "spacebot_proto",
     srcs = ["spacebot.proto"],
-    deps = ["@com_google_protobuf//:empty_proto"],
+    deps = ["//:google_proto_lib"],
 )
 
-python_proto_library(
+python_grpc_library(
     name = "spacebot_python_proto",
-    output_mode = "NO_PREFIX",
-    protos = [":spacebot_proto"],
+    srcs = [":spacebot_proto"],
+    deps = ["//:google_python_grpc_proto_lib"],
 )
 
 py_library(
     name = "definitions_lib",
-    srcs = ["definitions.py"],
-    deps = [":spacebot_python_proto"],
+    srcs = ["definitions.py", ":spacebot_python_proto"],
 )
 
 py_library(
@@ -24,7 +23,6 @@ py_library(
     srcs = ["client.py"],
     deps = [
         ":definitions_lib",
-        ":spacebot_python_proto",
     ],
 )
 
@@ -34,7 +32,6 @@ py_library(
     data = glob(["server_messages/**"]),
     deps = [
         ":definitions_lib",
-        ":spacebot_python_proto",
         "//machine_learning/common:openai_lib",
         "//machine_learning/common:utilities_lib",
     ],

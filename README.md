@@ -12,6 +12,11 @@
    - pylint
    - pytype (on hold until supports python 3.11)
    - termcolor
+   - python_dotenv
+   - openai
+1. a conda environment called `bazel-protoc` that has Python 3.11 and nothing installed but `conda install grpcio-tools`.
+   - This is a hack that is needed due to dependency hell between grpcio-tools and tensorflow.
+   - NOTE: You do not need to activate that environment yourself for any commands - the bazel rules will handle themselves.
 1. _PYTHONPATH_ set to the location of this repo so that you can import modules relative to it.
 1. _PYLINTRC_ set to the .pylintrc file in this repo (TODO: revisit this procedure later).
 

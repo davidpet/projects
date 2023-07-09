@@ -1,7 +1,7 @@
 import uuid
 from abc import ABC, abstractmethod
 
-from machine_learning.spacebot.machine_learning.spacebot.spacebot_pb2 import SpaceBotResult
+from machine_learning.spacebot.spacebot_pb2 import SpaceBotResult
 
 
 class SpaceBotServer(ABC):
