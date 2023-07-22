@@ -3,5 +3,105 @@
   "version": 1,
   "newProjectRoot": "angular",
   "projects": {
+    "spacebot-app": {
+      "projectType": "application",
+      "schematics": {
+        "@schematics/angular:component": {
+          "style": "scss"
+        }
+      },
+      "root": "machine_learning/spacebot/app",
+      "sourceRoot": "machine_learning/spacebot/app/src",
+      "prefix": "app",
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-angular:browser",
+          "options": {
+            "outputPath": "dist/spacebot-app",
+            "index": "machine_learning/spacebot/app/src/index.html",
+            "main": "machine_learning/spacebot/app/src/main.ts",
+            "polyfills": [
+              "zone.js"
+            ],
+            "tsConfig": "machine_learning/spacebot/app/tsconfig.app.json",
+            "inlineStyleLanguage": "scss",
+            "assets": [
+              "machine_learning/spacebot/app/src/favicon.ico",
+              "machine_learning/spacebot/app/src/assets"
+            ],
+            "styles": [
+              "machine_learning/spacebot/app/src/styles.scss"
+            ],
+            "scripts": []
+          },
+          "configurations": {
+            "production": {
+              "budgets": [
+                {
+                  "type": "initial",
+                  "maximumWarning": "500kb",
+                  "maximumError": "1mb"
+                },
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "2kb",
+                  "maximumError": "4kb"
+                }
+              ],
+              "outputHashing": "all"
+            },
+            "development": {
+              "buildOptimizer": false,
+              "optimization": false,
+              "vendorChunk": true,
+              "extractLicenses": false,
+              "sourceMap": true,
+              "namedChunks": true
+            }
+          },
+          "defaultConfiguration": "production"
+        },
+        "serve": {
+          "builder": "@angular-devkit/build-angular:dev-server",
+          "configurations": {
+            "production": {
+              "browserTarget": "spacebot-app:build:production"
+            },
+            "development": {
+              "browserTarget": "spacebot-app:build:development"
+            }
+          },
+          "defaultConfiguration": "development"
+        },
+        "extract-i18n": {
+          "builder": "@angular-devkit/build-angular:extract-i18n",
+          "options": {
+            "browserTarget": "spacebot-app:build"
+          }
+        },
+        "test": {
+          "builder": "@angular-devkit/build-angular:karma",
+          "options": {
+            "polyfills": [
+              "zone.js",
+              "zone.js/testing"
+            ],
+            "tsConfig": "machine_learning/spacebot/app/tsconfig.spec.json",
+            "inlineStyleLanguage": "scss",
+            "assets": [
+              "machine_learning/spacebot/app/src/favicon.ico",
+              "machine_learning/spacebot/app/src/assets"
+            ],
+            "styles": [
+              "machine_learning/spacebot/app/src/styles.scss"
+            ],
+            "scripts": []
+          }
+        }
+      }
+    }
+  },
+  "cli": {
+    "analytics": false
   }
 }
