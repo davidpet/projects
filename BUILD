@@ -1,6 +1,31 @@
 load("@com_github_bazelbuild_buildtools//buildifier:def.bzl", "buildifier")
 load("@rules_proto//proto:defs.bzl", "proto_library")
+load("@npm//:defs.bzl", "npm_link_all_packages")
+load("@aspect_rules_js//js:defs.bzl", "js_library")
 load("//bazel:defs.bzl", "package_local", "python_grpc_library")
+load("//bazel:angular-bazel.bzl", "ng_config")
+
+# TODO: lock this down later (and move exports to proper targets)
+package(default_visibility = ["//visibility:public"])
+
+# Link npm packages as //:node_modules.
+npm_link_all_packages(name = "node_modules")
+
+js_library(
+    name = "package_json_jslib",
+    srcs = ["package.json"],
+)
+
+js_library(
+    name = "karma_conf_js",
+    srcs = [
+        "karma.conf.js",
+    ],
+)
+
+ng_config(
+    name = "ng-config",
+)
 
 buildifier(
     name = "buildifier",
