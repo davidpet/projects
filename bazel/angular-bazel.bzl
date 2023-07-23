@@ -95,8 +95,14 @@ TEST_DEPS = LIBRARY_DEPS + [
 # If we don't do this, the output files will just be mysteriously missing with no error.
 # NOTE: I had to modify this from the original because I used 'libs' instead of 'projects'.
 # JQ_DIST_REPLACE_TSCONFIG = ".compilerOptions.paths |= map_values(map(gsub(\"^dist/(?<p>.+)$\"; \"libs/\"+.p+\"/dist\")))"
-# TODO: make this more generic/parameterized instead of hardcoding like this
-JQ_DIST_REPLACE_ANGULAR_JSON = ".projects |= with_entries( if .value.projectType == \"application\" then .value.architect.build.options.outputPath = \"machine_learning/spacebot/app/dist/spacebot-app\" else . end )"
+JQ_DIST_REPLACE_ANGULAR_JSON = """
+.projects |= with_entries(
+    if .value.projectType == "application"
+    then .value.architect.build.options.outputPath = .value.root + "/dist/" + .key
+    else .
+    end
+)
+"""
 JQ_DIST_REPLACE_NG_PACKAGE = ".dest = \"dist\""
 
 # Macro to define a filegroup called ng-config containing angular.json (copied to output of sandbox
