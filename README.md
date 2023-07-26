@@ -183,9 +183,52 @@ NOTE: technically the grpcio-tools part is not needed to run that api but is nee
 
 TODO: add details here
 
-# Environment Setup for TypeScript
+# Environment Setup for TypeScript/JavaScript/Angular
 
-TODO: add details here
+## JavaScript/NodeJS Setup
+
+1. Install [Nvm](https://github.com/nvm-sh/nvm) via Curl and shell script
+   1. It will download some stuff to ~/.nvm and add some stuff to ~/.bashrc (similar to what Conda does)
+   1. `command -v nvm` should now output `nvm`
+1. `nvm install node`
+   Install latest version of Node and auto-activates it on every shell instance (silently). In the simple case, you won't need any other versions and won't need to ever activate/deactivate anything or care about Conda for TS/JS/Angular stuff. The one exception is that you need to activate a conda environment to run _jupyter notebooks_, so that creates a bit of a weird cross-dependency.
+
+   After this step, you should be able to run `node` and `npm` from any new terminal instance without doing anything else. Global npm packages (installed with `npm -g packageName`) will install to subfolders of ~/.nvm). Without -g, they will install to a `node_modules` folder in the current folder or its ancestry.
+
+1. Add JavaScript support to Jupyter Notebooks (assuming jupyter setup as in TensorFlow GPU steps above). This will apply to the current _Conda_ environment.
+
+   `npm install -g ijavascript`
+   `ijsinstall`
+
+## TypeScript Setup
+
+1. `npm install -g typescript`
+1. `npm install -g ts-node`
+
+   `ts-node` is like `node` in that it gives you a TypeScript REPL.
+
+1. Add TypeScript supprot to Jupyter Notebooks (assuming jupyter setup as in TensorFlow GPU steps above). This will apply to the current _Conda_ environment.
+
+   `npm install -g itypescript`
+   `its --install=local`
+
+## Angular Setup
+
+1. `npm install -g @angular/cli`
+1. You may need to move the ng completion script below the nvm stuff in your .bashrc or .bash_profile.
+1. `npm install` in this repo after syncing to make sure all packaged listed in _package.json_ get installed to _node_modules_ locally.
+
+   This is both a one-time and an ongoing step.
+
+## Other Global NPM Packages to Install
+
+1. prettier
+1. eslint
+1. @typescript-eslint/parser
+1. @typescript-eslint/eslint-plugin
+1. @jquery
+1. pnpm
+1. @bazel/ibazel
 
 # VSCode Setup
 
@@ -212,9 +255,25 @@ Other Settings:
 
 TBD
 
-## TypeScript/JavaScript
+## TypeScript/JavaScript/Angular
 
-TBD
+Recommended Extensions:
+
+1. Angular Essentials (John Papa)
+
+Other Settings:
+
+1. Add this to _settings.json_ so that prettier is used by default formatting except for Python.
+
+```javascript
+  editor.defaultFormatter": "esbenp.prettier-vscode", "[python]": {
+    "editor.defaultFormatter": "ms-python.python",
+  }
+```
+
+2. .eslint.js
+
+   TODO: add here from my other repo and make sure it works
 
 # Running Tests
 
@@ -248,7 +307,7 @@ TODO: add details here
 
 ## JS and TS
 
-TODO: add here
+TODO: add here (using prettier and eslint)
 
 ## General
 
