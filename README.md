@@ -212,11 +212,13 @@ TODO: add details here
 1. Add JavaScript support to Jupyter Notebooks (assuming jupyter setup as in TensorFlow GPU steps above). This will apply to the current _Conda_ environment.
 
    `npm install -g ijavascript`
+
    `ijsinstall`
 
 ## TypeScript Setup
 
 1. `npm install -g typescript`
+
 1. `npm install -g ts-node`
 
    `ts-node` is like `node` in that it gives you a TypeScript REPL.
@@ -224,6 +226,7 @@ TODO: add details here
 1. Add TypeScript supprot to Jupyter Notebooks (assuming jupyter setup as in TensorFlow GPU steps above). This will apply to the current _Conda_ environment.
 
    `npm install -g itypescript`
+
    `its --install=local`
 
 ## Angular Setup
