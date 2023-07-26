@@ -17,6 +17,7 @@
 # TODO: type hint cleanup
 # TODO: tests (cheese historian failure case)(Really? failure case)
 # TODO: lint errors
+# TODO: TS lint+format setup
 # TODO: README (multiple levels) & update/clarify dependencies for different sub-projects
 # TODO: start a real bug/task list in GitHub for anything not done on check-in
 
