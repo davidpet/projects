@@ -1,6 +1,20 @@
 # Bazel Setup
 
-TODO: add details here
+## Mac
+
+`brew install bazel` then restart the shell.
+
+## Linux
+
+Follow instructions at follow instructions at https://bazel.build/install/ubuntu and ignore apt-transport-https failure.
+
+## Windows
+
+Download the binary and put it somewhere in the PATH or that can be referenced directly (eg. C:\bazel.exe).
+
+## Verifying
+
+`bazel --version`
 
 # Environment Setup for TensorFlow on GPU
 
@@ -236,6 +250,16 @@ TODO: add details here
 
 You probably want to set up setting sync and make a workspace for this repo (at least).
 
+## Bazel
+
+Recommended Extensions:
+
+1. bazel
+
+Other Settings:
+
+1. file association: \*.bazelrc -> shellscript (for syntax highlighting)
+
 ## Python
 
 Recommended Extensions:
@@ -368,3 +392,7 @@ Run `ng e2e` to execute the end-to-end tests via a platform of your choice. To u
 ## Further help
 
 To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.io/cli) page.
+
+# ToDo
+
+1. Encapsulate repetitive install steps with scripts where possible.
