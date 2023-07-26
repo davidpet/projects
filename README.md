@@ -6,7 +6,7 @@
 
 ## Linux
 
-Follow instructions at follow instructions at https://bazel.build/install/ubuntu and ignore apt-transport-https failure.
+Follow instructions at https://bazel.build/install/ubuntu and ignore apt-transport-https failure.
 
 ## Windows
 
