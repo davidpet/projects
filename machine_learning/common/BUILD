@@ -69,6 +69,20 @@ py_test(
 )
 
 py_test(
+    name = "utilities_test",
+    srcs = [
+        "utilities_test.py",
+        "utilities_test_data/subfolder_module.py",
+    ],
+    data = [
+        "utilities_test_data/file.json",
+        "utilities_test_data/file.txt",
+        "utilities_test_data/otherfile.txt",
+    ],
+    deps = [":utilities_lib"],
+)
+
+py_test(
     name = "visualization_test",
     srcs = ["visualization_test.py"],
     deps = [":visualization_lib"],
@@ -81,6 +95,7 @@ test_suite(
         ":datasets_test",
         ":error_analysis_test",
         ":models_test",
+        ":utilities_test",
         ":visualization_test",
     ],
 )

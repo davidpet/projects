@@ -52,7 +52,8 @@ def load_json_data_file(file: str, dir: str | None = None) -> dict[str, str]:
         dir (str, optional): Optional override path. Defaults to None.
 
     Returns:
-        dict[str, str]: Contents of the file as a dictionary.
+        dict[str, str]: Contents of the file as a dictionary, which is
+                        potentially multi-level.
     """
 
     dir = _get_folder(dir)
