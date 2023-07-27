@@ -13,8 +13,6 @@
 #        financially attacked)
 # TODO: put common stuff for future chatbots into common library
 
-# TODO: docstrings
-# TODO: type hint cleanup
 # TODO: tests (cheese historian failure case)(Really? failure case)
 # TODO: lint errors
 # TODO: TS lint+format setup

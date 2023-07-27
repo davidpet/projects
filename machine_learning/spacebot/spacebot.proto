@@ -19,7 +19,10 @@ message SpaceBotResult {
 service SpaceBotService {
     rpc CreateChat(CreateChatRequest) returns (SpaceBotResult);
     rpc EndChat(EndChatRequest) returns (google.protobuf.Empty);
+
+    // AI output.
     rpc FetchAlienMessage(FetchAlienMessageRequest) returns (SpaceBotResult);
+    // User input.
     rpc ProcessUserMessage(ProcessUserMessageRequest) returns (SpaceBotResult);
 }
 

@@ -193,6 +193,8 @@ NOTE: technically the grpcio-tools part is not needed to run that api but is nee
    - if any issues are noted later, I might have to look into docker-izing specific parts of the repo or something
      - or let some things be broken on Mac, which would get rid of these issues, but since I use my Mac a lot, that would suck
 
+1. Before running any openai API stuff, you need to have a file `~/openai.env` containing `OPENAI_API_KEY=` followed by your API key. Do not commit this file to any repo, or people on the internet will steal your money.
+
 # Environment Setup for Java
 
 TODO: add details here
@@ -347,6 +349,7 @@ TODO: add here (using prettier and eslint)
 - `machine_learning/spacebot/run_local.sh` to run SpaceBot client and server (both python)
   - see comments [here](machine_learning/spacebot/BUILD) for running client and server separately
 - For `Kaggle Titanic` run [this notebook](projects/machine_learning/kaggle_titanic/titanic.ipynb)
+- For the web app for SpaceBot, it is still under development, but there will likely be a shell script to spin up the Python server plus an Envoy proxy plus the Angular app (via ng serve).
 
 # Angular Workspace
 
