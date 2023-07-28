@@ -402,3 +402,4 @@ To get more help on the Angular CLI use `ng help` or go check out the [Angular C
 # ToDo
 
 1. Encapsulate repetitive install steps with scripts where possible.
+1. Document the need for extraPaths and manual import fixing to make proto imports work properly in VSCode.
