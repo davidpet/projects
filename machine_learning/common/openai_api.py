@@ -3,7 +3,7 @@
 from typing import Callable, Protocol, Any
 import os
 
-from dotenv import load_dotenv
+import dotenv
 import openai
 
 from machine_learning.common import utilities
@@ -13,19 +13,30 @@ StringDictionary = dict[str, str]
 # Few-shot learning examples for the LLM.
 Examples = dict[str, list[StringDictionary]]
 
+API_KEY_VAR = 'OPENAI_API_KEY'
+API_KEY_FILE = '~/openai.env'
+
 
 def fetch_api_key() -> bool:
     """
     Internally load the OpenAI Api key so that future operations will work.
 
-    Depends on ~/openai.env existing and settings OPENAI_API_KEY.
+    Will try to read OPENAI_API_KEY environment variable, and if that doesn't
+    exist, then it will load ~/openai.env to try to get the variable.
+    If the variable is not in either place, it will fail.
+
+    Only operations that go to the server, such as prompt() will depend on
+    the key.  Simple operations like loading text from files or adding
+    delimitters do not depend on it.
 
     Returns:
         bool: true if succeeds.
     """
 
-    load_dotenv(os.path.expanduser('~/openai.env'))
-    openai.api_key = os.getenv('OPENAI_API_KEY')
+    openai.api_key = os.getenv(API_KEY_VAR)
+    if openai.api_key is None:
+        dotenv.load_dotenv(os.path.expanduser(API_KEY_FILE))
+        openai.api_key = os.getenv(API_KEY_VAR)
     return openai.api_key is not None
 
 
@@ -57,7 +68,7 @@ def load_prompt_injection_declination_instructions() -> str:
     return utilities.load_data_file('openai_api/prompt_injection_decline.txt')
 
 
-def delimit_text(original_text: str, delimitter: str | None) -> str:
+def delimit_text(original_text: str, delimitter: str | None = None) -> str:
     """
     Place an optional delimiter before and after given string.
 
@@ -203,6 +214,7 @@ def moderation(input: str,
         return fn(output)
 
 
+# Fn to determine if meta_prompt result is single character y indicating yes.
 meta_prompt_y = lambda s: s.strip().lower() == 'y'
 
 
@@ -219,7 +231,10 @@ def meta_prompt(user_msg: str,
 
     Args:
         user_msg (str): the message from the user
-        meta_msg (str): a message describing the system message (higher-level)
+        meta_msg (str): a message describing the system message (higher-level).
+                        should be a format string with a 'system' field to be
+                        populated with the system message. You can delimit
+                        as you see fit within your own meta_msg.
         system_msg (str): the system message used for the user chat
         examples (Examples): few-shot learning examples. Expected to have a
                              'messages' field with child objects having
@@ -396,12 +411,11 @@ class Chat:
                                                 messages=self.messages)
         best_response = response.choices[0]
         next_msg = best_response.message['content']
-        self.add_assistant_msg(next_msg)
-
         if output_delim:
-            return extract_delimitted_text(next_msg, output_delim)
-        else:
-            return next_msg
+            next_msg = extract_delimitted_text(next_msg, output_delim)
+
+        self.add_assistant_msg(next_msg)
+        return next_msg
 
     def __str__(self) -> str:
         """

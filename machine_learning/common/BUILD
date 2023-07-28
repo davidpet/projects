@@ -69,6 +69,12 @@ py_test(
 )
 
 py_test(
+    name = "openai_api_test",
+    srcs = ["openai_api_test.py"],
+    deps = [":openai_lib"],
+)
+
+py_test(
     name = "utilities_test",
     srcs = [
         "utilities_test.py",
@@ -95,6 +101,7 @@ test_suite(
         ":datasets_test",
         ":error_analysis_test",
         ":models_test",
+        ":openai_api_test",
         ":utilities_test",
         ":visualization_test",
     ],

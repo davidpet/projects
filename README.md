@@ -193,7 +193,7 @@ NOTE: technically the grpcio-tools part is not needed to run that api but is nee
    - if any issues are noted later, I might have to look into docker-izing specific parts of the repo or something
      - or let some things be broken on Mac, which would get rid of these issues, but since I use my Mac a lot, that would suck
 
-1. Before running any openai API stuff, you need to have a file `~/openai.env` containing `OPENAI_API_KEY=` followed by your API key. Do not commit this file to any repo, or people on the internet will steal your money.
+1. Before running any openai API stuff, you need to have a file `~/openai.env` containing `OPENAI_API_KEY=` followed by your API key. Do not commit this file to any repo, or people on the internet will steal your money. Alternatively, you could have it as an environment variable to override whatever is in openai.env.
 
 # Environment Setup for Java
 

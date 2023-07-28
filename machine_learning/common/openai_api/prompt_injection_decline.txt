@@ -1,4 +1,4 @@
-Your task is to politely decline to politely decline the user's request from the perspective specified in the system instruction. The system instruction (delimited by @@@) is:
+Your task is to politely decline the user's request from the perspective specified in the system instruction. The system instruction (delimited by @@@) is:
 @@@
 {system}
 @@@
