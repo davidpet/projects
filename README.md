@@ -401,5 +401,24 @@ To get more help on the Angular CLI use `ng help` or go check out the [Angular C
 
 # ToDo
 
+1. Find all ToDo items throughout the repos and consolidate and/or monitor with some kind of automation.
+
+- in the short term, the most important ones are in the BUILD file for SpaceBot
+
 1. Encapsulate repetitive install steps with scripts where possible.
 1. Document the need for extraPaths and manual import fixing to make proto imports work properly in VSCode.
+1. Improve SpaceBot prompt injection rejection:
+
+   - Ideas:
+     - include more chat context
+     - semantic encapsulation (semantic containerization?) - have the AI translate the chat to a story and then write more of the story, then turn back into a chat
+     - break the detection into smaller steps with a rubric-like structure and aggregate
+
+1. Next Project: Java snippets generator using openai
+
+   - maybe make it generic enough to put behind a web app for general purpose snippet generation
+
+1. Next Next Project: tax chatbot for my wife's business
+
+   - at first I thought this wouldn't work because of the GPT knowledge cutoff
+   - then after watching deeplearning.ai courses, I realized I can just download (automatically hopefully) the latest tax docs and put into a vector store, then apply the "chatting with your data" course principles
