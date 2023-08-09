@@ -351,7 +351,7 @@ TODO: add here (using prettier and eslint)
   - see comments [here](machine_learning/spacebot/BUILD) for running client and server separately
 - For `Kaggle Titanic` run [this notebook](projects/machine_learning/kaggle_titanic/titanic.ipynb)
 - For the web app for SpaceBot, it is still under development, but there will likely be a shell script to spin up the Python server plus an Envoy proxy plus the Angular app (via ng serve).
-- For `SnippetMaster`, run `bazel run //machine_learning/snippet_master`. For now, output will be printed to the console and generated in `bazel-bin/machine_learning/snippet_master/snippet_master.runfiles/__main__`. You can manually copy the outline and/or .ipynb files to a snippets repo, for instance.
+- For `SnippetMaster`, run `bazel run //machine_learning/snippet_master`. For now, output will be printed to the console and generated in `bazel-bin/machine_learning/snippet_master/snippet_master.runfiles/__main__`. You can manually copy the outline and/or .ipynb files to a snippets repo, for instance. It is generally ok to use ctrl-c to stop in the middle of generation. Notebooks are not written until the end of each notebook, so if you don't kill it right at that moment, it's not likely to cause a problem.
 
 # Angular Workspace
 
@@ -416,10 +416,9 @@ To get more help on the Angular CLI use `ng help` or go check out the [Angular C
      - semantic encapsulation (semantic containerization?) - have the AI translate the chat to a story and then write more of the story, then turn back into a chat
      - break the detection into smaller steps with a rubric-like structure and aggregate
 
-1. Next Project: Java snippets generator using openai
-
-   - maybe make it generic enough to put behind a web app for general purpose snippet generation
-
+1. Possibly Improve SnippetMaster to generate things besides programming languages (eg. library examples).
+1. Add tests to SnippetMaster.
+1. Web app for SnippetMaster? (maybe not - it his the API key pretty hard)
 1. Next Next Project: tax chatbot for my wife's business
 
    - at first I thought this wouldn't work because of the GPT knowledge cutoff

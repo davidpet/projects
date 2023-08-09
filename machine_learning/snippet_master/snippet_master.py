@@ -12,6 +12,7 @@ INPUTS = {
     'system': 'prompts/system.txt',
     'outline': 'prompts/outline.txt',
     'subtopics': 'prompts/subtopics.txt',
+    'snippet': 'prompts/snippet.txt',
 }
 
 OUTPUTS = {
@@ -161,14 +162,38 @@ def create_snippets(topic: str, kernel: str, outline: Outline,
         for subtopic in section.subtopics:
             print(f'\tGenerating snippet for {subtopic}')
 
+            # Get the AI summary and code cell content for each subtopic
+            llm_response = prompt(prompt=data['snippet'].format(
+                topic, section.title, subtopic),
+                                  system=data['system']).strip()
+            split_index = llm_response.find('#####')
+            if split_index == -1:
+                markdown_content = ''
+                code_content = llm_response
+            else:
+                markdown_content = llm_response[6 + split_index:].strip()
+                code_content = llm_response[:split_index].strip()
+
+            # The AI wants to wrap the code in markdown so let's play along
+            # (Trying to fix it via prompt may cause context confusion)
+            code_content = re.sub(r'^\s*```\S*\s*$',
+                                  '',
+                                  code_content,
+                                  flags=re.MULTILINE).strip()
+
+            # Diagnostics
+            #print('-code-')
+            #print(code_content)
+            #print('-markdown-')
+            #print(markdown_content)
+
             # Add a title+summary markdown cell for each subtopic
             markdown = nbf4.new_markdown_cell(
-                f'# {subtopic}\nThis is a markdown cell.')
+                f'# {subtopic}\n{markdown_content}')
             notebook.cells.append(markdown)
 
             # Add a code snippet cell for each subtopic
-            code = nbf4.new_code_cell(
-                '//This is Java\nSystem.out.println("Hi")\n')
+            code = nbf4.new_code_cell(code_content)
             notebook.cells.append(code)
 
         # Write to disk (ends up in bazel-bin)

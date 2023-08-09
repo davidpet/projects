@@ -1,0 +1,8 @@
+For the programming language "{}", high-level topic "{}" and subtopic "{}", please generate a code snippet demonstrating the subtopic of the topic for the language as thoroughly as possible.
+
+Please keep these guidelines in mind for your output:
+1. Any summary remarks or information that doesn't go in code should be markdown text that comes after the code, delimtted with #####.
+2. The code should be well-commented to explain what is being demonstrated and what it is doing.
+3. The code should print to demonstrate features, and have comments at the end of print lines saying what is expected to be printed.
+4. Where appropriate, both declarations and usages should be demonstrated for a complete treatment of the subtopic.
+5. Try to show all the variations of the syntax and usage that are possible for the given subtopic.
