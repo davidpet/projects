@@ -1,5 +1,5 @@
 import sys
-import os
+import re
 
 from machine_learning.common.openai_api import prompt, fetch_api_key
 from machine_learning.common.utilities import load_data_files
@@ -17,6 +17,58 @@ OUTPUTS = {
 }
 
 data = None
+
+
+class Section:
+    """
+    A section within the outline for a programming language.
+
+    Main title and subtopic titles do not contain the leading numbering here.
+    """
+
+    title: str
+    subtopics: list[str]
+
+    def __init__(self, title: str, subtopics: list[str]):
+        """
+        Create a new instance.
+
+        Args:
+            title (str): the section title (with numbering to strip)
+            subtopics (list[str]): subtopic titles (with numbering to strip)
+        """
+
+        self.title = self._remove_annotation(title)
+        self.subtopics = [
+            self._remove_annotation(subtopic) for subtopic in subtopics
+        ]
+
+    def _remove_annotation(self, title: str) -> str:
+        """Strip initial numbering from a title string."""
+
+        return re.sub(r'^\s*\S+\s*', '', title, count=1)
+
+
+class Outline():
+    """Parses outline text into list of Section objects."""
+
+    sections: list[Section]
+
+    def __init__(self, text):
+        lines = text.split('\n')
+        section_lines = []
+
+        section_start = 0
+        for i in range(len(lines) + 1):
+            if i == len(lines) or not lines[i].strip():
+                section_end = i
+                if section_start != section_end:
+                    section_lines.append(lines[section_start:section_end])
+                section_start = i + 1
+
+        self.sections = [
+            Section(section[0], section[1:]) for section in section_lines
+        ]
 
 
 def write_file(path: str, text: str) -> None:
@@ -74,6 +126,69 @@ def prompt_outline(topic: str) -> str:
     print_section('Outline')
     print(outline)
 
+    return outline
+
+
+def create_snippets(topic: str, outline: Outline, count: int) -> None:
+    """
+    Create snippets.
+
+    Args:
+        topic (str): programming language
+        outline (Outline): the outline of topics and subtopics for snippets
+        count (int): number of topics from beginning of outline to create.
+                     This allows for testing without the system going crazy.
+    """
+
+    print('[Simulated for Now]')
+
+    for i in range(count):
+        section = outline.sections[i]
+        print(f'Generating notebook for {section.title}.')
+        for subtopic in section.subtopics:
+            print(f'\tGenerating snippet for {subtopic}')
+
+
+def prompt_snippets(topic: str, outline: Outline) -> None:
+    """
+    Ask user how many snippets to create and then create them.
+
+    User can just hit enter to generate all for outline.
+    Invalid input will just show error.
+    0 will pass through silently and do nothing.
+
+    Args:
+        topic (str): programming language
+        outline (Outline): outline to use for snippet generation
+    """
+
+    print(SECTION_DELIM)
+    response = input(
+        'How many notebooks would you like to generate? (just hit Enter for max): '
+    ).strip()
+
+    if not response:
+        # Empty = all
+        count = len(outline.sections)
+    else:
+        try:
+            # Non-empty = expect integer
+            count = int(response)
+            # Clip to max of range
+            if count > len(outline.sections):
+                count = len(outline.sections)
+        except:
+            # Invalid input = generate nothing
+            count = 0
+            print('ERROR: Invalid count!')
+        if count < 0:
+            # Clip to min of range
+            count = 0
+
+    if count:
+        print_section('Snippets')
+        create_snippets(topic, outline, count)
+
 
 def main() -> int:
     topic = input('Please enter a topic: ').capitalize()
@@ -86,6 +201,7 @@ def main() -> int:
     data = load_data_files(INPUTS)
 
     outline = prompt_outline(topic)
+    prompt_snippets(topic, Outline(outline))
 
     return 0
 
