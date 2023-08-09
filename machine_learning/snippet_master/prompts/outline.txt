@@ -87,7 +87,7 @@ VI. Functional Programming
   G.  map, reduce, and filter
   H.  Return Object from Lambda
 
-VI. Classes
+VII. Classes
   A.  Basic Syntax and Instantiation (inc. static, instance, class members, etc.)
   B.  Access Modifiers
   C.  Inheritance
@@ -115,7 +115,7 @@ VI. Classes
   Y.  Destructors/Finalizers/Disposable Pattern
   Z.  Callable Object/Call Operator
 
-VII. Generics/Templates
+VIII. Generics/Templates
   A.  Generic Function
   B.  Generic Class
   C.  Generic Lambda
@@ -124,7 +124,7 @@ VII. Generics/Templates
   F.  Metaprogramming
   G.  Type Erasure/Runtime Type
 
-VIII. Modules/Packages/Imports
+IX. Modules/Packages/Imports
   A.  Importing Built-In Libraries
   B.  Declarting Importable Module/Package
   C.  Importing Custom Module/Package by Relative path from Subfolder
@@ -139,18 +139,18 @@ VIII. Modules/Packages/Imports
   L.  Ambient Declarations
   M.  Search Path
 
-IX. Docstrings
+X. Docstrings
   A.  Functions
   B.  Classes
   C.  Variables
   D.  Package/File
 
-X. Decorators
+XI. Decorators
   A.  Function Decorators
   B.  Class Decorators
   C.  Useful Built-In Decorators
 
-XI. Collections
+XII. Collections
   A.  Array
   B.  List
   C.  Dictionary
@@ -168,7 +168,7 @@ XI. Collections
   O.  Sorting
   P.  Stack and Queue
 
-XII. Standard library
+XIII. Standard library
   A.  Console I/O
   B.  Math
   C.  File I/O
@@ -176,7 +176,7 @@ XII. Standard library
   E.  HTTP
   F.  Paths and Environment Variables
 
-XIII. Testing (JUnit-style)
+XIV. Testing (JUnit-style)
   A.  Test Class/Suite and Methods
   B.  Setup and Teardown
   C.  Persistence of Class/Suite Data Between Tests
