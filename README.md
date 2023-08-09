@@ -350,6 +350,7 @@ TODO: add here (using prettier and eslint)
   - see comments [here](machine_learning/spacebot/BUILD) for running client and server separately
 - For `Kaggle Titanic` run [this notebook](projects/machine_learning/kaggle_titanic/titanic.ipynb)
 - For the web app for SpaceBot, it is still under development, but there will likely be a shell script to spin up the Python server plus an Envoy proxy plus the Angular app (via ng serve).
+- For `SnippetMaster`, run `bazel run //machine_learning/snippet_master`. For now, output will be printed to the console and generated in `bazel-bin/machine_learning/snippet_master/snippet_master.runfiles/__main__`.
 
 # Angular Workspace
 
