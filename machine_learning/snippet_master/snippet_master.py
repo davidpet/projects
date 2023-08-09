@@ -131,27 +131,31 @@ def prompt_outline(topic: str) -> str:
     return outline
 
 
-def create_snippets(topic: str, outline: Outline, count: int) -> None:
+def create_snippets(topic: str, kernel: str, outline: Outline,
+                    count: int) -> None:
     """
     Create snippets.
 
     Args:
         topic (str): programming language
+        kernel (str): the Jupyter notebook kernel to use
         outline (Outline): the outline of topics and subtopics for snippets
         count (int): number of topics from beginning of outline to create.
                      This allows for testing without the system going crazy.
     """
 
+    print(f'Using kernel {kernel}')
+
     for i in range(count):
         section = outline.sections[i]
         print(f'Generating notebook for {section.title}.')
 
-        # Create a new iJava notebook
+        # Create a new notebook w/ appropriate kernel info
         notebook = nbf4.new_notebook()
         notebook.metadata.kernelspec = {
-            "name": "ijava",
-            "display_name": "Java",
-            "language": "java"
+            "name": kernel,
+            "display_name": topic,
+            "language": topic.lower(),
         }
 
         for subtopic in section.subtopics:
@@ -164,8 +168,7 @@ def create_snippets(topic: str, outline: Outline, count: int) -> None:
 
             # Add a code snippet cell for each subtopic
             code = nbf4.new_code_cell(
-                '//This is Java\nSystem.out.println("Hi")\n',
-                metadata={"language": "java"})
+                '//This is Java\nSystem.out.println("Hi")\n')
             notebook.cells.append(code)
 
         # Write to disk (ends up in bazel-bin)
@@ -210,8 +213,14 @@ def prompt_snippets(topic: str, outline: Outline) -> None:
             count = 0
 
     if count:
+        kernel = input(
+            'What is the kernel to use for notebooks? (Default to i + language lowercased): '
+        ).strip()
+        if not kernel:
+            kernel = 'i' + topic.lower()
+
         print_section('Snippets')
-        create_snippets(topic, outline, count)
+        create_snippets(topic, kernel, outline, count)
 
 
 def main() -> int:
