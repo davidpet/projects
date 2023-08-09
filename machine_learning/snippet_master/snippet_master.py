@@ -1,5 +1,7 @@
 import sys
 import re
+import nbformat as nbf
+import nbformat.v4 as nbf4
 
 from machine_learning.common.openai_api import prompt, fetch_api_key
 from machine_learning.common.utilities import load_data_files
@@ -140,13 +142,35 @@ def create_snippets(topic: str, outline: Outline, count: int) -> None:
                      This allows for testing without the system going crazy.
     """
 
-    print('[Simulated for Now]')
-
     for i in range(count):
         section = outline.sections[i]
         print(f'Generating notebook for {section.title}.')
+
+        # Create a new iJava notebook
+        notebook = nbf4.new_notebook()
+        notebook.metadata.kernelspec = {
+            "name": "ijava",
+            "display_name": "Java",
+            "language": "java"
+        }
+
         for subtopic in section.subtopics:
             print(f'\tGenerating snippet for {subtopic}')
+
+            # Add a title+summary markdown cell for each subtopic
+            markdown = nbf4.new_markdown_cell(
+                f'# {subtopic}\nThis is a markdown cell.')
+            notebook.cells.append(markdown)
+
+            # Add a code snippet cell for each subtopic
+            code = nbf4.new_code_cell(
+                '//This is Java\nSystem.out.println("Hi")\n',
+                metadata={"language": "java"})
+            notebook.cells.append(code)
+
+        # Write to disk (ends up in bazel-bin)
+        with open(section.title.replace('/', ', ') + '.ipynb', 'w') as f:
+            nbf.write(notebook, f)
 
 
 def prompt_snippets(topic: str, outline: Outline) -> None:

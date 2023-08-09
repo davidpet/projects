@@ -176,6 +176,7 @@ In order to run [openai_apy.py](machine_learning/common/openai_api.py) and any t
 NOTE: technically the grpcio-tools part is not needed to run that api but is needed for the apps that use it in order to really make use of it (to allow for client/server communication). If just running python code to call openai, that step can be skipped.
 
 1. Create a conda environment with Python 3.11.
+1. If going to generate Jupyter notebooks (eg. via SnippetMaster), `conda install jupyter` (if didn't already do it from TensorFlow setup).
 1. `pip install termcolor`
 1. `pip install python_dotnev`
 1. `pip install openai`
@@ -350,7 +351,7 @@ TODO: add here (using prettier and eslint)
   - see comments [here](machine_learning/spacebot/BUILD) for running client and server separately
 - For `Kaggle Titanic` run [this notebook](projects/machine_learning/kaggle_titanic/titanic.ipynb)
 - For the web app for SpaceBot, it is still under development, but there will likely be a shell script to spin up the Python server plus an Envoy proxy plus the Angular app (via ng serve).
-- For `SnippetMaster`, run `bazel run //machine_learning/snippet_master`. For now, output will be printed to the console and generated in `bazel-bin/machine_learning/snippet_master/snippet_master.runfiles/__main__`.
+- For `SnippetMaster`, run `bazel run //machine_learning/snippet_master`. For now, output will be printed to the console and generated in `bazel-bin/machine_learning/snippet_master/snippet_master.runfiles/__main__`. You can manually copy the outline and/or .ipynb files to a snippets repo, for instance.
 
 # Angular Workspace
 
