@@ -1,0 +1,10 @@
+Given the outline below surrounded by ###, for the language "{}", please create 3 new sections for the bottom, with appropriate subpoints populated based on the language and the rest of the outline:
+- Language-Specific Features, populate with subpoints for anything specific to the language that is not covered already in the outline, but only syntax (not libraries, tools, etc.). Try not to duplicate what is already mentioned elsehwere in the outline.
+- 3rd Party Libraries, populate with subpoints for the 3-10 most commonly used libraries that everyone should know. Less is more - if fewer libraries are common, then include fewer.
+- Recent Versions, populate with subpoints for all versions from 1995 until your knowledge cutoff in chronological order, giving the version number and year
+
+Please only give me the 3 sections I mentioned above with the appropriate Roman numeral topic numbers to add to the end of my outline (picking up after the last existing one leaves off).  Please do not give me any of my own outline back.
+
+###
+{}
+###

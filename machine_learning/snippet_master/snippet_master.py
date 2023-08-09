@@ -9,6 +9,7 @@ SECTION_DELIM = '*' * 50
 INPUTS = {
     'system': 'prompts/system.txt',
     'outline': 'prompts/outline.txt',
+    'subtopics': 'prompts/subtopics.txt',
 }
 
 OUTPUTS = {
@@ -31,7 +32,10 @@ def print_section(section: str) -> None:
 
 def create_outline(topic: str) -> str:
     outline = prompt(system=data['system'].format(topic),
-                     prompt=data['outline'].format(topic))
+                     prompt=data['subtopics'].format(topic, data['outline']))
+    outline = outline.replace('###', '').strip()
+    outline = data['outline'] + '\n\n' + outline
+
     print_section('Outline')
     print(outline)
     write_file('outline.txt', outline)
