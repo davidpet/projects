@@ -31,16 +31,48 @@ def print_section(section: str) -> None:
 
 
 def create_outline(topic: str) -> str:
+    """
+    Create an outline using LLM and write it to a file.
+
+    Args:
+        topic (str): the programming language
+
+    Returns:
+        str: the outline
+    """
+
     outline = prompt(system=data['system'].format(topic),
                      prompt=data['subtopics'].format(topic, data['outline']))
     outline = outline.replace('###', '').strip()
     outline = data['outline'] + '\n\n' + outline
 
-    print_section('Outline')
-    print(outline)
     write_file('outline.txt', outline)
 
     return outline
+
+
+def prompt_outline(topic: str) -> str:
+    """
+    Prompt user whether to create an outline and then either create or load it.
+
+    Args:
+        topic (str): the programming language
+
+    Returns:
+        str: the new or existing outline text
+    """
+
+    response = input(
+        'Would you like to generate an outline? (Y or N): ').strip().lower()
+    if 'y' in response:
+        outline = create_outline(topic)
+    else:
+        outline_path = input(
+            'Where is your existing outline located (full path)?: ')
+        with open(outline_path, 'r') as f:
+            outline = f.read()
+    print_section('Outline')
+    print(outline)
 
 
 def main() -> int:
@@ -53,7 +85,7 @@ def main() -> int:
     global data
     data = load_data_files(INPUTS)
 
-    outline = create_outline(topic)
+    outline = prompt_outline(topic)
 
     return 0
 
