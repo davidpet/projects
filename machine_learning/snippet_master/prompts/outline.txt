@@ -1,23 +1,27 @@
 I. Variables
   A.  Interning
   B.  Data Types
-  C.  Constants/Final Variables
-  D.  Statics
-  E.  Enums (inc. numeric, string, and strongly-typed)
-  F.  Nullability
-  G.  NaN, Infinity, etc.
-  H.  References and Mutability
-  I.  Type Inference
-  J.  Equality (all ways)
-  K.  Casting & Coercion
-  L.  Type Alias
-  M.  Type Union
-  N.  Variable Lifetime inc. Caveats
-  O.  Scope and Visibility
-  P.  Local, Instance, and Class Variables
-  Q.  Pointers, References, Smart Pointers, Memory Management
-  R.  Garbage Collection, Memory Leaks
-  S.  Move and Copy Semantics
+  C.  Different Integer Type Sizes
+  D.  Different Floating Point Type Sizes
+  E.  Float Equality (approximate)
+  F.  Constants/Final Variables
+  G.  Statics
+  H.  Enums (inc. most basic/minimal, numeric, string, and strongly-typed)
+  I.  Nullability
+  J.  NaN, Infinity, etc.
+  K.  References and Mutability
+  L.  Type Inference
+  M.  Equality (all ways)
+  N.  Casting & Coercion
+  O.  Type Alias
+  P.  Type Union
+  Q.  Variable Lifetime inc. Caveats
+  R.  Scope and Visibility
+  S.  Local, Instance, and Class Variables
+  T.  Pointers, References, Smart Pointers, Memory Management
+  U.  Garbage Collection, Memory Leaks
+  V.  Move, Copy, and Clone Semantics
+  W.  Uninitialized/Default Values (inc. local, global, instance, and static contexts)
 
 II. Operators
   A.  All Math & Logic Operators
@@ -30,6 +34,9 @@ II. Operators
   H.  Bitwise
   I.  Boolean Operators on Non-Boolean Values
   J.  Operator Precedence
+  K.  Collection Operators
+  L.  String Operators
+  M.  Runtime Type/Type Equality/Type Comparison
 
 III. Strings and Printing
   A.  All Ways to Quote Strings
@@ -44,22 +51,27 @@ III. Strings and Printing
   J.  Regular Expressions
   K.  Serialization
   L.  StringBuilder/StringBuffer/etc.
+  M. Index Operator and Slicing
 
 IV. Control Flow
   A.  if/then statements
   B.  if/then/else statements
   C.  switch statements
-  D.  for loops
-  E.  while loops
-  F.  do-while loops
-  G.  break and continue
-  H.  try/catch/finally and throwing exceptions
-  I.  truthiness in conditionals
+  D.  Switch Statements on Non-Integer Types (string, enum, custom)
+  E.  for loops
+  F.  while loops
+  G.  do-while loops
+  H.  break and continue
+  I.  try/catch/finally and throwing exceptions
   J.  emptiness checks
   K.  context management
-  L.  asserts
-  M.  when braces are required vs. optional
-  N.  Generator/Lazy List
+  L.  Context Management with Multiple Resources at Once
+  M.  asserts
+  N.  when braces are required vs. optional
+  O.  Generator/Lazy List
+  P.  Arguments to main() function
+  Q.  Truthiness of Different Data Types in Boolean Conditions
+  R.  Actual Value Returned by Short-Circuiting
 
 V. Functions
   A.  Basic Syntax
@@ -89,44 +101,56 @@ VI. Functional Programming
 
 VII. Classes
   A.  Basic Syntax and Instantiation (inc. static, instance, class members, etc.)
-  B.  Access Modifiers
-  C.  Inheritance
-  D.  Polymorphism
-  E.  Nullability
-  F.  Constructors, Initialization Lists
-  G.  Base and Delegating Constructors
-  H.  Calling Base Class
-  I.  Interfaces and Abstract Base Classes
-  J.  Multiple Inheritance
-  K.  Name Hiding
-  L.  Construction Order
-  M.  Nested Classes
-  N.  Dynamic Types
-  O.  Operator Overloading (inc. toString())
-  P.  Common Base Class/Boxing
-  Q.  Indexers
-  R.  Copying
-  S.  Declaration Order
-  T.  Structural typing
-  U.  Partial Classes
-  V.  Reference Type vs. Value Type
-  W.  Properties (manual and auto-implemented)
-  X.  Return Type Inference
-  Y.  Destructors/Finalizers/Disposable Pattern
-  Z.  Callable Object/Call Operator
+  B.  Static Classes
+  C.  Static Constructor
+  D.  Access Modifiers
+  E.  Inheritance
+  F.  Interfaces and Abstract Base Classes
+  G.  Multiple Inheritance
+  H.  Polymorphism
+  I.  Nullability of Class Members
+  J.  Initializing Instance Values in Class Declarations
+  K.  Constructors, Initialization Lists
+  L.  Base and Delegating Constructors
+  M.  Constructors Included by Default
+  N.  Calling Base Class Method from Derived Class Method
+  O.  this/self Keyword
+  P.  Name Hiding
+  Q.  Construction Order
+  R.  Nested Classes
+  S.  Dynamic Types
+  T.  Operator Overloading
+  U.  Indexers
+  V.  Copying/Cloning
+  W.  Boxing/Unboxing
+  X.  Root Class of Type System (and methods to override)
+  Y.  Useful Built-in Interfaces and Abstract Base Classes
+  Z.  Importance of Declaration Order/Forward Declarations
+  AA.  Structural typing
+  AB.  Partial Classes
+  AC.  Reference Type vs. Value Type
+  AD.  Properties (manual and auto-implemented)
+  AE.  Return Type Inference
+  AF.  Destructors/Finalizers/Disposable Pattern
+  AG.  Callable Object/Call Operator
+  AH.  Anonymous Class
 
 VIII. Generics/Templates
   A.  Generic Function
+  B.  Explicitly Calling Generic Function with Type
   B.  Generic Class
+  B.  Explicitly Creating Generic Class with Type
   C.  Generic Lambda
-  D.  Important Built-in Generic Types
+  D.  Important Built-in Generic Classes/Interfaces
   E.  Void as T argument
   F.  Metaprogramming
   G.  Type Erasure/Runtime Type
+  H.  Type Constraints
+  I.  Type Wildcards
 
 IX. Modules/Packages/Imports
   A.  Importing Built-In Libraries
-  B.  Declarting Importable Module/Package
+  B.  Declaring Importable Module/Package
   C.  Importing Custom Module/Package by Relative path from Subfolder
   D.  Other Package Management Options
   E.  Renaming Imported Symbols
@@ -138,6 +162,13 @@ IX. Modules/Packages/Imports
   K.  Namespaces
   L.  Ambient Declarations
   M.  Search Path
+  N.  Importing Constants and Variables
+  O.  Default Imports in Every Program
+  P.  Multiple Top-Level Classes in Same File
+  Q.  Top-Level Classes Referring to Each Other Mutually
+  R.  Top-Level Functions (not in classes)
+  S.  Top-Level Variables/Constants (not in classes)
+  T.  Top-Level Enums (not in classes)
 
 X. Docstrings
   A.  Functions
@@ -153,20 +184,25 @@ XI. Decorators
 XII. Collections
   A.  Array
   B.  List
-  C.  Dictionary
-  D.  Set
-  E.  String Builder
-  F.  Tuple
-  G.  Struct
-  H.  Immutable Types
-  I.  String as Collection
-  J.  Generic Sequence/Iterable Type
-  K.  Aggregate functions (max, min, etc.)
-  L.  Iterating Keys vs. Values
-  M.  Zipping
-  N.  Slicing
-  O.  Sorting
-  P.  Stack and Queue
+  C.  Vector
+  D.  Dictionary/Map
+  E.  Set
+  F.  String Builder
+  G.  Tuple
+  H.  Struct
+  I.  Immutable Types
+  J.  String as Collection
+  K.  Generic Sequence/Iterable Type
+  L.  Aggregate functions (max, min, etc.)
+  M.  Iterating Keys vs. Values
+  N.  Zipping
+  O.  Slicing
+  P.  Sorting
+  Q.  Stack and Queue
+  R.  Collection Literals and Inline Initialization
+  S.  Builder Pattern
+  T.  Index Operator
+  U.  Conversions Between Collection Types
 
 XIII. Standard library
   A.  Console I/O
