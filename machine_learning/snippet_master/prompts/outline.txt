@@ -1,27 +1,28 @@
 I. Variables
   A.  Interning
   B.  Data Types
-  C.  Different Integer Type Sizes
-  D.  Different Floating Point Type Sizes
-  E.  Float Equality (approximate)
-  F.  Constants/Final Variables
-  G.  Statics
-  H.  Enums (inc. most basic/minimal, numeric, string, and strongly-typed)
-  I.  Nullability
-  J.  NaN, Infinity, etc.
-  K.  References and Mutability
-  L.  Type Inference
-  M.  Equality (all ways)
-  N.  Casting & Coercion
-  O.  Type Alias
-  P.  Type Union
-  Q.  Variable Lifetime inc. Caveats
-  R.  Scope and Visibility
-  S.  Local, Instance, and Class Variables
-  T.  Pointers, References, Smart Pointers, Memory Management
-  U.  Garbage Collection, Memory Leaks
-  V.  Move, Copy, and Clone Semantics
-  W.  Uninitialized/Default Values (inc. local, global, instance, and static contexts)
+  C. Signed vs. Unsigned Numbers
+  D.  Different Integer Type Sizes
+  E.  Different Floating Point Type Sizes
+  F.  Float Equality (approximate)
+  G.  Constants/Final Variables
+  H.  Statics
+  I.  Enums (inc. most basic/minimal, numeric, string, and strongly-typed)
+  J.  Nullability
+  K.  NaN, Infinity, etc.
+  L.  References and Mutability
+  M.  Type Inference
+  N.  Equality (all ways)
+  O.  Casting & Coercion
+  P.  Type Alias
+  Q.  Type Union
+  R.  Variable Lifetime inc. Caveats
+  S.  Scope and Visibility
+  T.  Local, Instance, and Class Variables
+  U.  Pointers, References, Smart Pointers, Memory Management
+  V.  Garbage Collection, Memory Leaks
+  W.  Move, Copy, and Clone Semantics
+  X.  Uninitialized/Default Values (inc. local, global, instance, and static contexts)
 
 II. Operators
   A.  All Math & Logic Operators
