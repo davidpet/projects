@@ -187,6 +187,8 @@ IX. Modules/Packages/Imports
   R.  Top-Level Functions (not in classes)
   S.  Top-Level Variables/Constants (not in classes)
   T.  Top-Level Enums (not in classes)
+  U.  Fully-Qualified Symbol Usages Without Importing First
+  V.  Dealing With Symbol Name Conflicts
 
 X. Docstrings
   A.  Functions
