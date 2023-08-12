@@ -23,6 +23,8 @@ I. Variables
   V.  Garbage Collection, Memory Leaks
   W.  Move, Copy, and Clone Semantics
   X.  Uninitialized/Default Values (inc. local, global, instance, and static contexts)
+  Y.  Getting Characteristics Such as Max and Min Value of Data Type
+  Z.  Delayed Initialization
 
 II. Operators
   A.  All Math & Logic Operators
@@ -52,7 +54,10 @@ III. Strings and Printing
   J.  Regular Expressions
   K.  Serialization
   L.  StringBuilder/StringBuffer/etc.
-  M. Index Operator and Slicing
+  M.  Index Operator and Slicing
+  N.  Converting Collections to String
+  O.  Interop Between Characters and Numbers
+  P.  Comments (block, line, etc.)
 
 IV. Control Flow
   A.  if/then statements
@@ -89,6 +94,9 @@ V. Functions
   L.  Inline Functions
   M.  Macros
   N.  Extension Methods
+  O.  Specifying Exceptions Thrown by Function
+  P.  Recursion
+  Q.  Trailing Commas Allowed in Functions and Literals?
 
 VI. Functional Programming
   A.  Lambdas
@@ -135,6 +143,12 @@ VII. Classes
   AF.  Destructors/Finalizers/Disposable Pattern
   AG.  Callable Object/Call Operator
   AH.  Anonymous Class
+  AI.  Static and Default Methods in Interfaces
+  AJ.  Interface Member Visibility (default and modifiers)
+  AK.  Interface Members Other Than Public Abstract Methods
+  AL.  Sealed/Final Methods
+  AM.  Sealed/Final Classes
+  AN.  Caveats for Subclass Constructors (eg. when to call base, construction order, etc.)
 
 VIII. Generics/Templates
   A.  Generic Function
@@ -148,6 +162,7 @@ VIII. Generics/Templates
   G.  Type Erasure/Runtime Type
   H.  Type Constraints
   I.  Type Wildcards
+  J.  Overloading Generic by Number of Type Parameters
 
 IX. Modules/Packages/Imports
   A.  Importing Built-In Libraries
@@ -200,10 +215,15 @@ XII. Collections
   O.  Slicing
   P.  Sorting
   Q.  Stack and Queue
-  R.  Collection Literals and Inline Initialization
+  R.  Collection Literals and Inline Initialization/Passing
   S.  Builder Pattern
   T.  Index Operator
   U.  Conversions Between Collection Types
+  V.  Ordered vs. Unordered Maps/Dictionaries
+  W.  Sorting (Default vs. Custom Comparator)
+  X.  Casting Between More and Less Specific Element Types in Collection References
+  Y.  Copying/Cloning
+  Z.  Uniformly Initializing Elements (eg. to default or non-default values based on type)
 
 XIII. Standard library
   A.  Console I/O
