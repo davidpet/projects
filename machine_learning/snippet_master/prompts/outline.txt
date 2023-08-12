@@ -149,6 +149,8 @@ VII. Classes
   AL.  Sealed/Final Methods
   AM.  Sealed/Final Classes
   AN.  Caveats for Subclass Constructors (eg. when to call base, construction order, etc.)
+  AO.  Instances Accessing Each Others' Private Members
+  AP.  Friend Classes
 
 VIII. Generics/Templates
   A.  Generic Function
