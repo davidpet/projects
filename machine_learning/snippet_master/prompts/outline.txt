@@ -151,6 +151,8 @@ VII. Classes
   AN.  Caveats for Subclass Constructors (eg. when to call base, construction order, etc.)
   AO.  Instances Accessing Each Others' Private Members
   AP.  Friend Classes
+  AQ.  Method Name Collisions in Interfaces Implemented by Class
+  AR.  Partial Interface Implementation
 
 VIII. Generics/Templates
   A.  Generic Function
