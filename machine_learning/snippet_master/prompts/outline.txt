@@ -24,7 +24,8 @@ I. Variables
   W.  Move, Copy, and Clone Semantics
   X.  Uninitialized/Default Values (inc. local, global, instance, and static contexts)
   Y.  Getting Characteristics Such as Max and Min Value of Data Type
-  Z.  Delayed Initialization
+  Z.  Delayed Initialization of Locals (constants vs. variables)
+  AA. Delayed Iniitialization of Instance Members (constants vs. variables)
 
 II. Operators
   A.  All Math & Logic Operators
@@ -153,6 +154,7 @@ VII. Classes
   AP.  Friend Classes
   AQ.  Method Name Collisions in Interfaces Implemented by Class
   AR.  Partial Interface Implementation
+  AS.  Covariant Return Types
 
 VIII. Generics/Templates
   A.  Generic Function
@@ -167,6 +169,7 @@ VIII. Generics/Templates
   H.  Type Constraints
   I.  Type Wildcards
   J.  Overloading Generic by Number of Type Parameters
+  K.  Covariance/Contravariance
 
 IX. Modules/Packages/Imports
   A.  Importing Built-In Libraries
@@ -235,7 +238,7 @@ XIII. Standard library
   A.  Console I/O
   B.  Math
   C.  File I/O
-  D.  Threading/async/await/lock/promise
+  D.  Threading/async/await/lock/promise/mutex
   E.  HTTP
   F.  Paths and Environment Variables
 
