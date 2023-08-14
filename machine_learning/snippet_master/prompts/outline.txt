@@ -98,6 +98,7 @@ V. Functions
   O.  Specifying Exceptions Thrown by Function
   P.  Recursion
   Q.  Trailing Commas Allowed in Functions and Literals?
+  R.  Passing by Reference (modifying a nonlocal variable passed to a function)
 
 VI. Functional Programming
   A.  Lambdas
