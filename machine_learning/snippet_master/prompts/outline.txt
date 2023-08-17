@@ -249,6 +249,8 @@ XII. Collections
   AC. Skipping Items in Array Initializer?
   AD. Sorted Versions of Collection Types
   AE. Bitfields
+  AF. Thread Safety of Built-in Data Types and Collections
+  AG. Thread-Safe Alternatives to Built-in Types and Collections
 
 XIII. Standard library
   A.  Console I/O
