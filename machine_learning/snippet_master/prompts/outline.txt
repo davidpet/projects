@@ -1,7 +1,7 @@
 I. Variables
   A.  Interning
   B.  Data Types
-  C. Signed vs. Unsigned Numbers
+  C.  Signed vs. Unsigned Numbers
   D.  Different Integer Type Sizes
   E.  Different Floating Point Type Sizes
   F.  Float Equality (approximate)
@@ -26,6 +26,7 @@ I. Variables
   Y.  Getting Characteristics Such as Max and Min Value of Data Type
   Z.  Delayed Initialization of Locals (constants vs. variables)
   AA. Delayed Iniitialization of Instance Members (constants vs. variables)
+  AB. Declaring Multiple Variables in One Line
 
 II. Operators
   A.  All Math & Logic Operators
@@ -59,6 +60,9 @@ III. Strings and Printing
   N.  Converting Collections to String
   O.  Interop Between Characters and Numbers
   P.  Comments (block, line, etc.)
+  Q.  String Splitting
+  R.  Sorting
+  S.  Line Endings (In Literals and Relative to System)
 
 IV. Control Flow
   A.  if/then statements
@@ -79,6 +83,7 @@ IV. Control Flow
   P.  Arguments to main() function
   Q.  Truthiness of Different Data Types in Boolean Conditions
   R.  Actual Value Returned by Short-Circuiting
+  S.  Use of final or constant variable in loop headers
 
 V. Functions
   A.  Basic Syntax
@@ -99,6 +104,8 @@ V. Functions
   P.  Recursion
   Q.  Trailing Commas Allowed in Functions and Literals?
   R.  Passing by Reference (modifying a nonlocal variable passed to a function)
+  S.  Const/final Arguments
+  T.  Uniqueness of Method Signature (param names?  param types? overloads?)
 
 VI. Functional Programming
   A.  Lambdas
@@ -109,6 +116,7 @@ VI. Functional Programming
   F.  Declaration of Variable Holding Function
   G.  map, reduce, and filter
   H.  Return Object from Lambda
+  I.  Range
 
 VII. Classes
   A.  Basic Syntax and Instantiation (inc. static, instance, class members, etc.)
@@ -171,6 +179,8 @@ VIII. Generics/Templates
   I.  Type Wildcards
   J.  Overloading Generic by Number of Type Parameters
   K.  Covariance/Contravariance
+  L.  Custom Comparators for Elements
+  M.  Built-in Comparators for Elements
 
 IX. Modules/Packages/Imports
   A.  Importing Built-In Libraries
@@ -224,7 +234,7 @@ XII. Collections
   N.  Zipping
   O.  Slicing
   P.  Sorting
-  Q.  Stack and Queue
+  Q.  Stack, Queue, Deque
   R.  Collection Literals and Inline Initialization/Passing
   S.  Builder Pattern
   T.  Index Operator
@@ -234,14 +244,22 @@ XII. Collections
   X.  Casting Between More and Less Specific Element Types in Collection References
   Y.  Copying/Cloning
   Z.  Uniformly Initializing Elements (eg. to default or non-default values based on type)
+  AA. Shuffling
+  AB. Priority Queue, Minheap, Maxheap
+  AC. Skipping Items in Array Initializer?
+  AD. Sorted Versions of Collection Types
+  AE. Bitfields
 
 XIII. Standard library
   A.  Console I/O
-  B.  Math
-  C.  File I/O
-  D.  Threading/async/await/lock/promise/mutex
-  E.  HTTP
-  F.  Paths and Environment Variables
+  B.  Idiomatic User Input (Lines and Chunks)
+  C.  Math
+  D.  File I/O
+  E.  Threading/async/await/lock/promise/mutex
+  F.  HTTP
+  G.  Paths and Environment Variables
+  H.  Events
+  I.  Observables
 
 XIV. Testing (JUnit-style)
   A.  Test Class/Suite and Methods
