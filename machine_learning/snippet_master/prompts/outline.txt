@@ -164,6 +164,8 @@ VII. Classes
   AQ.  Method Name Collisions in Interfaces Implemented by Class
   AR.  Partial Interface Implementation
   AS.  Covariant Return Types
+  AT.  Inheritance and Name Hiding of Static Members
+  AU.  Hashing Members Together
 
 VIII. Generics/Templates
   A.  Generic Function
@@ -174,13 +176,14 @@ VIII. Generics/Templates
   D.  Important Built-in Generic Classes/Interfaces
   E.  Void as T argument
   F.  Metaprogramming
-  G.  Type Erasure/Runtime Type
+  G.  Type Erasure/Runtime Type/Raw Types in Code
   H.  Type Constraints
   I.  Type Wildcards
   J.  Overloading Generic by Number of Type Parameters
   K.  Covariance/Contravariance
   L.  Custom Comparators for Elements
   M.  Built-in Comparators for Elements
+  N.  Curiously Recurring Template Pattern (CRTP)
 
 IX. Modules/Packages/Imports
   A.  Importing Built-In Libraries
@@ -251,6 +254,7 @@ XII. Collections
   AE. Bitfields
   AF. Thread Safety of Built-in Data Types and Collections
   AG. Thread-Safe Alternatives to Built-in Types and Collections
+  AH. Searching
 
 XIII. Standard library
   A.  Console I/O
