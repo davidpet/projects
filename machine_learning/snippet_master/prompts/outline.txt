@@ -265,7 +265,7 @@ XIII. Standard library
   F.  HTTP
   G.  Paths and Environment Variables
   H.  Events
-  I.  Observables
+  I.  Observables/Reactive Programming
 
 XIV. Testing (JUnit-style)
   A.  Test Class/Suite and Methods
