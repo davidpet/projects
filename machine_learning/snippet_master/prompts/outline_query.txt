@@ -1,0 +1,65 @@
+I. Basic Statements
+  A.  SELECT, INSERT, UPDATE, DELETE
+  B.  WHERE clause and Filter Conditions
+  C.  Operators (e.g., =, <>, >, <, etc.)
+  D.  Aggregate Functions (e.g., COUNT, SUM, AVG)
+
+II. Table Management
+  A.  Creating Permanent Tables
+  B.  Creating Temporary Tables
+  C.  Cloning Tables
+
+III. Columns and Data Transformation in Queries
+  A.  Renaming Columns using Aliases
+  B.  Reordering Columns in the Output
+  C.  Parsing and Manipulating Structured Data (e.g., JSON objects)
+  D.  Converting Columns to Different Data Types
+
+IV. Joining Data
+  A.  INNER JOIN, LEFT JOIN, RIGHT JOIN, FULL OUTER JOIN
+  B.  CROSS JOIN, SELF JOIN
+  C.  Conditions in JOINs
+
+V. Advanced Queries
+  A.  GROUP BY and HAVING
+  B.  Subqueries and Derived Tables
+  C.  UNION, INTERSECT, EXCEPT
+
+VI. Functions, Procedures, and Sequences
+  A.  Built-in Functions (e.g., Date functions, String functions)
+  B.  User-defined Functions
+  C.  Sequences (for generating unique numbers)
+
+VII. Data Definition and Manipulation
+  A.  DDL: CREATE, ALTER, DROP, TRUNCATE
+  B.  DML: SELECT, INSERT, UPDATE, DELETE
+
+VIII. Indexes, Keys, and Constraints
+  A.  Creating and Managing Indexes
+  B.  Understanding Primary Keys
+  C.  Foreign Keys and Relations
+  D.  Constraints and Enforcement
+
+IX. Database Design
+  A.  Normalization
+  B.  Denormalization
+
+X. Views and Virtual Tables
+  A.  Creating and Managing Views
+  B.  Benefits of Views
+
+XI. Graphing and Visualization
+  A.  Basics of Graphing Tools
+  B.  Integrating with Visualization Software
+
+XII. Transactions and Concurrency Control
+  A.  ACID properties
+  B.  COMMIT, ROLLBACK
+
+XIII. Security and Permissions
+  A.  Granting and Revoking Permissions
+  B.  Roles and Users
+
+XIV. Extensions and Variations of SQL
+  A.  SQL in Big Data Ecosystem (e.g., HiveQL)
+  B.  Vendor-specific SQL Extensions (e.g., T-SQL, PL/SQL)

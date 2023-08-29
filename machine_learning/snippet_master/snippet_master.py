@@ -10,7 +10,8 @@ SECTION_DELIM = '*' * 50
 
 INPUTS = {
     'system': 'prompts/system.txt',
-    'outline': 'prompts/outline.txt',
+    'outline_oop': 'prompts/outline_oop.txt',
+    'outline_query': 'prompts/outline_query.txt',
     'subtopics': 'prompts/subtopics.txt',
     'snippet': 'prompts/snippet.txt',
 }
@@ -18,6 +19,17 @@ INPUTS = {
 OUTPUTS = {
     'outline': 'outline.txt',
 }
+
+OUTLINE_MENU = '''Which outline would you like to use?
+1. OOP (eg. Java, C++, TypeScript, etc.)
+2. Query (eg. SQL)
+
+Enter number (default 1): '''
+
+OUTLINE_MENU_CHOICES = [
+    'outline_oop',
+    'outline_query',
+]
 
 data = None
 
@@ -85,23 +97,24 @@ def print_section(section: str) -> None:
     print(SECTION_DELIM)
 
 
-def create_outline(topic: str) -> str:
+def create_outline(topic: str, outline_template: str) -> str:
     """
     Create an outline using LLM and write it to a file.
 
     Args:
         topic (str): the programming language
+        outline_template (str): the outline to use
 
     Returns:
         str: the outline
     """
 
     outline = prompt(system=data['system'].format(topic),
-                     prompt=data['subtopics'].format(topic, data['outline']))
+                     prompt=data['subtopics'].format(topic, outline_template))
     outline = outline.replace('###', '').strip()
-    outline = data['outline'] + '\n\n' + outline
+    outline = outline_template + '\n\n' + outline
 
-    write_file('outline.txt', outline)
+    write_file(OUTPUTS['outline'], outline)
 
     return outline
 
@@ -120,7 +133,11 @@ def prompt_outline(topic: str) -> str:
     response = input(
         'Would you like to generate an outline? (Y or N): ').strip().lower()
     if 'y' in response:
-        outline = create_outline(topic)
+        which_template = int(input(OUTLINE_MENU).strip() or 1) - 1
+        if which_template < 0 or which_template >= len(OUTLINE_MENU_CHOICES):
+            raise 'Invalid outline template choice!'
+        outline_template = data[OUTLINE_MENU_CHOICES[which_template]]
+        outline = create_outline(topic, outline_template)
     else:
         outline_path = input(
             'Where is your existing outline located (full path)?: ')
