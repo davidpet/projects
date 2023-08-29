@@ -63,3 +63,10 @@ XIII. Security and Permissions
 XIV. Extensions and Variations of SQL
   A.  SQL in Big Data Ecosystem (e.g., HiveQL)
   B.  Vendor-specific SQL Extensions (e.g., T-SQL, PL/SQL)
+
+XV.  Syntax
+  A.  All Built-in Data Types/Literals
+  B.  All Ways of Quoting
+  C.  Grouping/Nesting
+  D.  Variables
+  E.  Macros
