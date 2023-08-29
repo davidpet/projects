@@ -149,8 +149,11 @@ def prompt_outline(topic: str) -> str:
     return outline
 
 
-def create_snippets(topic: str, kernel: str, outline: Outline,
-                    count: int) -> None:
+def create_snippets(topic: str,
+                    kernel: str,
+                    outline: Outline,
+                    count: int,
+                    use_python=False) -> None:
     """
     Create snippets.
 
@@ -160,9 +163,15 @@ def create_snippets(topic: str, kernel: str, outline: Outline,
         outline (Outline): the outline of topics and subtopics for snippets
         count (int): number of topics from beginning of outline to create.
                      This allows for testing without the system going crazy.
+        use_python (bool): to override kernel and language info.
+                     This allows for extensions that use Python cells instead
+                     of their own kernels.
     """
 
-    print(f'Using kernel {kernel}')
+    if not use_python:
+        print(f'Using kernel {kernel}')
+    else:
+        print(f'Using python cells!')
 
     for i in range(count):
         section = outline.sections[i]
@@ -170,11 +179,18 @@ def create_snippets(topic: str, kernel: str, outline: Outline,
 
         # Create a new notebook w/ appropriate kernel info
         notebook = nbf4.new_notebook()
-        notebook.metadata.kernelspec = {
-            "name": kernel,
-            "display_name": topic,
-            "language": topic.lower(),
-        }
+        if use_python:
+            notebook.metadata.kernelspec = {
+                "name": 'python3',
+                "display_name": 'Python 3 (ipykernel)',
+                "language": 'python',
+            }
+        else:
+            notebook.metadata.kernelspec = {
+                "name": kernel,
+                "display_name": topic,
+                "language": topic.lower(),
+            }
 
         for subtopic in section.subtopics:
             print(f'\tGenerating snippet for {subtopic}')
@@ -255,14 +271,23 @@ def prompt_snippets(topic: str, outline: Outline) -> None:
             count = 0
 
     if count:
-        kernel = input(
-            'What is the kernel to use for notebooks? (Default to i + language lowercased): '
-        ).strip()
-        if not kernel:
-            kernel = 'i' + topic.lower()
+        unique_kernel = (input(
+            'Does this language have its own kernel? (Y or N - default Y): ').
+                         strip().lower() or 'y') == 'y'
+        kernel = None
+        if unique_kernel:
+            kernel = input(
+                'What is the kernel to use for notebooks? (Default to i + language lowercased): '
+            ).strip()
+            if not kernel:
+                kernel = 'i' + topic.lower()
 
         print_section('Snippets')
-        create_snippets(topic, kernel, outline, count)
+        create_snippets(topic,
+                        kernel,
+                        outline,
+                        count,
+                        use_python=not unique_kernel)
 
 
 def main() -> int:
