@@ -22,8 +22,14 @@ IV. Joining Data
 
 V. Advanced Queries
   A.  GROUP BY and HAVING
-  B.  Subqueries and Derived Tables
-  C.  UNION, INTERSECT, EXCEPT
+  B.  GROUP BY on two columns
+  C.  Subqueries and Derived Tables
+  D.  UNION, INTERSECT, EXCEPT
+  E.  ORDER BY (single column)
+  F.  ORDER BY (two columns)
+  G.  SELECT...CASE...WHEN in Queries
+  H.  IF...ELSE..ENDIF in Queries
+  I.  IF EXISTS (eg. in DROP)
 
 VI. Functions, Procedures, and Sequences
   A.  Built-in Functions (e.g., Date functions, String functions)
@@ -63,6 +69,7 @@ XIII. Security and Permissions
 XIV. Extensions and Variations of SQL
   A.  SQL in Big Data Ecosystem (e.g., HiveQL)
   B.  Vendor-specific SQL Extensions (e.g., T-SQL, PL/SQL)
+  C.  NoSQL (eg. MongoDB)
 
 XV.  Syntax
   A.  All Built-in Data Types/Literals
@@ -70,3 +77,7 @@ XV.  Syntax
   C.  Grouping/Nesting
   D.  Variables
   E.  Macros
+  F.  Null and Nullability Checks
+  G.  Case Sensitivity (Tables, DBs, Variables, Functions, etc.)
+  H.  Overall Statement Syntax and Effect of Clause order
+  I.  Casting (eg. string to date and other combinations)
