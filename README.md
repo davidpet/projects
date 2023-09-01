@@ -423,3 +423,18 @@ To get more help on the Angular CLI use `ng help` or go check out the [Angular C
 
    - at first I thought this wouldn't work because of the GPT knowledge cutoff
    - then after watching deeplearning.ai courses, I realized I can just download (automatically hopefully) the latest tax docs and put into a vector store, then apply the "chatting with your data" course principles
+
+1. Other Possible Projects:
+
+   - domain adapters for using LLM for non-LLM things
+
+     - eg. music melodies
+     - idea is that humans learn a lot by language and LLMs have millions of dollars of training to leverage
+       - limitation is that some things are also learned by direct sensory experience in addition to or instead of by language
+
+   - get caught up on the new stuff that's been coming out (Llama, etc.)
+
+     - more deeplearning.ai short courses
+
+   - horizontal snippet generator (considering SnippetMaster to be vertical)
+     - eg. cmopare what inheriting interface looks like in a list of languages
