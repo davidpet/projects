@@ -117,6 +117,8 @@ VI. Functional Programming
   G.  map, reduce, and filter
   H.  Return Object from Lambda
   I.  Range
+  J.  Functional zip() method on 2 streams
+  K.  IIFE
 
 VII. Classes
   A.  Basic Syntax and Instantiation (inc. static, instance, class members, etc.)
