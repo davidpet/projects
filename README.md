@@ -413,6 +413,25 @@ Requirements to Use:
   - _C:\OpenMusic_ should point to [openmusic/workspaces](openmusic/workspaces)
   - _C:\OpenMusic Code_ should point to [openmusic/libraries](openmusic/libraries)
 - any paths you configure or load in OM using these workspaces should be relative to those C:\ symlink paths, not the real paths
+- install OM libraries referenced by the workspaces:
+  - OM-JI
+  - OMRC
+  - OMCS
+  - Chaos
+  - Cloud
+  - Situation
+  - Profile
+  - LZ
+  - RepMus
+  - Alea
+  - Esquisse
+  - OMTristan
+  - OMio
+  - OM-Sox (different process - have to get snapshot from develop branch in Sourceforge)(retrieved on 1/8/23)
+- Do "exclude process" if AV (such as Norton) tries to delete PNG of library (such as OMCS) when you load it
+- Enable listener input
+- If you need to use MIDI, Mac and Windows have separate steps to set up routing for that
+  - use Ableton/Serum on Windows and GarageBand on Mac
 
 # ToDo
 
