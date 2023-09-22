@@ -401,6 +401,19 @@ Run `ng e2e` to execute the end-to-end tests via a platform of your choice. To u
 
 To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.io/cli) page.
 
+# OpenMusic
+
+The [openmusic](openmusic) folder contains Lisp libraries and OpenMusic workspaces using those libraries. It is not currently integrated into Bazel. I'm not even sure storing it in Git is the best thing, since it has a lot of artifacts and system dependencies, but for now this is where I put it.
+
+Requirements to Use:
+
+- Windows (because of how paths are configured)(for now)
+- OM 7.1 Installed
+- symlinks because OM only likes to use C:\
+  - _C:\OpenMusic_ should point to [openmusic/workspaces](openmusic/workspaces)
+  - _C:\OpenMusic Code_ should point to [openmusic/libraries](openmusic/libraries)
+- any paths you configure or load in OM using these workspaces should be relative to those C:\ symlink paths, not the real paths
+
 # ToDo
 
 1. Find all ToDo items throughout the repos and consolidate and/or monitor with some kind of automation.
@@ -438,3 +451,8 @@ To get more help on the Angular CLI use `ng help` or go check out the [Angular C
 
    - horizontal snippet generator (considering SnippetMaster to be vertical)
      - eg. cmopare what inheriting interface looks like in a list of languages
+
+1. Figure out how to make OpenMusic paths system independent
+1. See if getting Lisp and OM into Bazel is desirable and feasible
+
+   - also make Lisp snippets

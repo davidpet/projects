@@ -1,0 +1,6 @@
+; OM File Header - Saved 2023/01/17 21:46:05
+; (7.01 :patc (om-make-point 24 24) (om-make-point 50 50) (om-make-point 500 320) "" 183 0 nil "2023/01/17 21:41:44")
+; End File Header
+; External resources 
+; (list (list (quote :abstraction) "#P\"C:../scales/snap-to-scale.omp\""))
+(in-package :om)(load-lib-for (quote nil))(setf *om-current-persistent* (om-load-patch1 "accidental-output" (quote ((let ((box (om-load-boxout "output" 0 (om-make-point 186 369) (quote ((om-load-inputfun (quote input-funbox) "" "out" nil))) nil nil))) (when (fboundp (quote set-active)) (set-active box nil)) box) (let ((box (om-load-boxin "input 2" 1 (om-make-point 55 45) "" nil nil nil))) (when (fboundp (quote set-active)) (set-active box nil)) box) (let ((box (om-load-boxin "input" 0 (om-make-point 5 45) "" nil nil nil))) (when (fboundp (quote set-active)) (set-active box nil)) box) (let ((box (om-load-boxcall (quote patch-box) "snap-to-scale" (quote ("elements" "scales" "snap-to-scale")) (quote ((om-load-inputfun (quote input-funbox) "" "pitch" 6000) (om-load-inputfun (quote input-funbox) "" "scale" (list 6000 6200 6400 6500 6700 6900 7100 7200)))) (om-make-point 144 214) nil nil nil "snap-to-scale" 2))) (when (fboundp (quote set-active)) (set-active box nil)) box))) (quote ((3 1 0 0 nil 0) (2 0 3 0 nil 0) (1 0 3 1 nil 0))) nil 7.01))

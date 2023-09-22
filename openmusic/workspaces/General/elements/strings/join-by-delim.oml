@@ -1,0 +1,4 @@
+; OM File Header - Saved 2023/01/17 01:01:20
+; (7.01 :lisp (om-make-point 496 10) (om-make-point 50 50) (om-make-point 500 400) "" 124 0 "2023/01/15 23:30:55" "2023/01/17 01:01:20")
+; End File Header
+(in-package :om)(load-lib-for (quote nil))(setf *om-current-persistent* (om-load-lisp-patch "join-by-delim" 7.01 "; list is the list of items to join$; delim is a string (not symbol)$$(lambda (list delim) $  (format nil (format nil \"~~{~~a~~^~a~~}\" delim) list))$"))
