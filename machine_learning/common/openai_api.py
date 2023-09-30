@@ -111,7 +111,7 @@ def extract_delimitted_text(full_text: str, delimitter: str) -> str:
 
 def prompt(prompt: str,
            temperature: float = 0.0,
-           model: str = 'gpt-3.5-turbo',
+           model: str = 'gpt-4',
            system: str | None = None,
            input_delim: str | None = None,
            output_delim: str | None = None) -> str:
@@ -122,7 +122,7 @@ def prompt(prompt: str,
         prompt (str): the text prompt to send
         temperature (float, optional): randomness/creativity of the response.
                                        Defaults to 0.0 for predictability.
-        model (str, optional): the LLM to use. Defaults to 'gpt-3.5-turbo'.
+        model (str, optional): the LLM to use. Defaults to 'gpt-4'.
         system (str, optional): system role message. Defaults to None.
         input_delim (str | None, optional): Delimiter to put around prompt.
                                             Defaults to None.
@@ -272,7 +272,7 @@ class Chat:
     An ongoing LLM chat with memory.
 
     Attributes:
-        model(str): LLM model to use.  Defaults to 'got-3.5-turbo'.
+        model(str): LLM model to use.  Defaults to 'got-4'.
         temperature(float): randomness in responses.  Defaults to 0.0.
         messages(list[str]): the messages so far (all roles).
 
@@ -282,12 +282,12 @@ class Chat:
     temperature: float
     messages: list[str]
 
-    def __init__(self, model: str = 'gpt-3.5-turbo', temperature: float = 0.0):
+    def __init__(self, model: str = 'gpt-4', temperature: float = 0.0):
         """
         Create a new chat instance.
 
         Args:
-            model (str, optional): LLM model to use. Defaults to gpt-3.5-turbo.
+            model (str, optional): LLM model to use. Defaults to gpt-4.
             temperature (float, optional): randomness. Defaults to 0.0.
         """
 

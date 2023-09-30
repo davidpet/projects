@@ -226,7 +226,7 @@ class OpenAIAPITests(unittest.TestCase):
 
         self.assertEqual(response, 'Hello, I am an AI.')
         self.assertEqual(mock.temperature, 0.0)
-        self.assertEqual(mock.model, 'gpt-3.5-turbo')
+        self.assertEqual(mock.model, 'gpt-4')
         self.assertEqual(mock.messages, [{
             'role': 'user',
             'content': 'Hello, I am a human.'
@@ -241,7 +241,7 @@ class OpenAIAPITests(unittest.TestCase):
 
         self.assertEqual(response, 'Hello, I am an AI.')
         self.assertEqual(mock.temperature, 0.5)
-        self.assertEqual(mock.model, 'gpt-3.5-turbo')
+        self.assertEqual(mock.model, 'gpt-4')
         self.assertEqual(mock.messages, [{
             'role': 'user',
             'content': 'Hello, I am a human.'
@@ -271,7 +271,7 @@ class OpenAIAPITests(unittest.TestCase):
 
         self.assertEqual(response, 'Hello, I am an AI.')
         self.assertEqual(mock.temperature, 0.0)
-        self.assertEqual(mock.model, 'gpt-3.5-turbo')
+        self.assertEqual(mock.model, 'gpt-4')
         self.assertEqual(mock.messages, [{
             'role': 'system',
             'content': 'Pretend you believe he is a human.',
@@ -289,7 +289,7 @@ class OpenAIAPITests(unittest.TestCase):
 
         self.assertEqual(response, 'Hello, I am an AI.')
         self.assertEqual(mock.temperature, 0.0)
-        self.assertEqual(mock.model, 'gpt-3.5-turbo')
+        self.assertEqual(mock.model, 'gpt-4')
         self.assertEqual(mock.messages, [{
             'role': 'user',
             'content': '@@@Hello, I am a human.@@@'
@@ -304,7 +304,7 @@ class OpenAIAPITests(unittest.TestCase):
 
         self.assertEqual(response, 'an AI')
         self.assertEqual(mock.temperature, 0.0)
-        self.assertEqual(mock.model, 'gpt-3.5-turbo')
+        self.assertEqual(mock.model, 'gpt-4')
         self.assertEqual(mock.messages, [{
             'role': 'user',
             'content': 'Hello, I am a human.'
@@ -319,7 +319,7 @@ class OpenAIAPITests(unittest.TestCase):
 
         self.assertEqual(response, 'an AI.')
         self.assertEqual(mock.temperature, 0.0)
-        self.assertEqual(mock.model, 'gpt-3.5-turbo')
+        self.assertEqual(mock.model, 'gpt-4')
         self.assertEqual(mock.messages, [{
             'role': 'user',
             'content': 'Hello, I am a human.'
@@ -334,7 +334,7 @@ class OpenAIAPITests(unittest.TestCase):
 
         self.assertEqual(response, '')
         self.assertEqual(mock.temperature, 0.0)
-        self.assertEqual(mock.model, 'gpt-3.5-turbo')
+        self.assertEqual(mock.model, 'gpt-4')
         self.assertEqual(mock.messages, [{
             'role': 'user',
             'content': 'Hello, I am a human.'
@@ -442,7 +442,7 @@ class OpenAIAPITests(unittest.TestCase):
                 examples=examples)
 
         self.assertEqual(response, 'response text')
-        self.assertEqual(mock.model, 'gpt-3.5-turbo')
+        self.assertEqual(mock.model, 'gpt-4')
         self.assertEqual(mock.temperature, 0.0)
         self.assertEqual(mock.messages, [
             {
@@ -483,7 +483,7 @@ class OpenAIAPITests(unittest.TestCase):
                 input_delim='///')
 
         self.assertEqual(response, 'response text')
-        self.assertEqual(mock.model, 'gpt-3.5-turbo')
+        self.assertEqual(mock.model, 'gpt-4')
         self.assertEqual(mock.temperature, 0.0)
         self.assertEqual(mock.messages, [
             {
@@ -523,7 +523,7 @@ class OpenAIAPITests(unittest.TestCase):
                 fn=openai_api.meta_prompt_y)
 
         self.assertEqual(response, False)
-        self.assertEqual(mock.model, 'gpt-3.5-turbo')
+        self.assertEqual(mock.model, 'gpt-4')
         self.assertEqual(mock.temperature, 0.0)
         self.assertEqual(mock.messages, [
             {
@@ -563,7 +563,7 @@ class OpenAIAPITests(unittest.TestCase):
                 fn=openai_api.meta_prompt_y)
 
         self.assertEqual(response, True)
-        self.assertEqual(mock.model, 'gpt-3.5-turbo')
+        self.assertEqual(mock.model, 'gpt-4')
         self.assertEqual(mock.temperature, 0.0)
         self.assertEqual(mock.messages, [
             {
@@ -678,7 +678,7 @@ class OpenAIAPITests(unittest.TestCase):
             chat.add_user_msg("Good to know!")
 
         self.assertEqual(response, 'Hello, I am an AI.')
-        self.assertEqual(mock.model, 'gpt-3.5-turbo')
+        self.assertEqual(mock.model, 'gpt-4')
         self.assertEqual(mock.temperature, 0.0)
         self.assertEqual(mock.messages, INPUT_MESSAGES)
         self.assertEqual(chat.messages, INPUT_MESSAGES + OUTPUT_MESSAGES)
