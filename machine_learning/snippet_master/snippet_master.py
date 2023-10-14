@@ -154,6 +154,8 @@ class CodeFileFactory(VirtualNotebookFactory):
         self.count = 0
         self.subtopic = ''
 
+        self.code_files = []
+
     def __next_name(self) -> str:
         return '{:03}'.format(self.count)
 
@@ -163,6 +165,7 @@ class CodeFileFactory(VirtualNotebookFactory):
         os.mkdir(self.TEMP_FOLDER)
 
         self.count = 0
+        self.code_files = []
 
     def set_kernel_info(self, name: str, display_name: str,
                         language: str) -> None:
@@ -180,15 +183,26 @@ class CodeFileFactory(VirtualNotebookFactory):
             f.write(content)
 
     def add_code_snippet(self, code: str) -> None:
-        with open(
-                os.path.join(
-                    self.TEMP_FOLDER,
-                    self.__next_name() + ' - ' + self.subtopic + ' - snippet.' +
-                    self.extension), 'w') as f:
+        filename = self.__next_name(
+        ) + ' - ' + self.subtopic + ' - snippet.' + self.extension
+
+        with open(os.path.join(self.TEMP_FOLDER, filename), 'w') as f:
             f.write(code)
         self.count += 1
+        self.code_files.append(filename)
 
     def save(self, name: str):
+        with open(os.path.join(self.TEMP_FOLDER, 'BUILD'), 'w') as f:
+            for code_file in self.code_files:
+                f.write(self.extension + "_binary (\n")
+                f.write('  name = "' + os.path.splitext(code_file)[0].replace(
+                    '/', '_').replace(' ', '_') + '",\n')
+                f.write('  srcs = ["' + code_file + '"],\n')
+                f.write(')\n')
+                f.write('\n')
+
+        if os.path.exists(name):
+            shutil.rmtree(name)
         os.rename(self.TEMP_FOLDER, name)
 
 
