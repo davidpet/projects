@@ -86,6 +86,56 @@ class Outline():
         ]
 
 
+class VirtualNotebookFactory:
+    """Interface for notebook creation."""
+
+    def create(self):
+        pass
+
+    def set_kernel_info(self, name: str, display_name: str,
+                        language: str) -> None:
+        pass
+
+    def add_markdown(self, content: str) -> None:
+        pass
+
+    def add_code_snippet(self, code: str) -> None:
+        pass
+
+    def save(self, name: str):
+        pass
+
+
+class JupyterNotebookFactory(VirtualNotebookFactory):
+    """Jupyter notebook creation."""
+
+    def __init__(self):
+        self.notebook = None
+
+    def create(self):
+        self.notebook = nbf4.new_notebook()
+
+    def set_kernel_info(self, name: str, display_name: str,
+                        language: str) -> None:
+        self.notebook.metadata.kernelspec = {
+            "name": name,
+            "display_name": display_name,
+            "language": language,
+        }
+
+    def add_markdown(self, content: str) -> None:
+        markdown = nbf4.new_markdown_cell(content)
+        self.notebook.cells.append(markdown)
+
+    def add_code_snippet(self, code: str) -> None:
+        code_cell = nbf4.new_code_cell(code)
+        self.notebook.cells.append(code_cell)
+
+    def save(self, name: str):
+        with open(name + '.ipynb', 'w') as f:
+            nbf.write(self.notebook, f)
+
+
 def write_file(path: str, text: str) -> None:
     with open(path, 'w') as f:
         f.write(text)
@@ -149,11 +199,14 @@ def prompt_outline(topic: str) -> str:
     return outline
 
 
-def create_snippets(topic: str,
-                    kernel: str,
-                    outline: Outline,
-                    count: int,
-                    use_python=False) -> None:
+def create_snippets(
+    topic: str,
+    kernel: str,
+    outline: Outline,
+    count: int,
+    use_python=False,
+    notebook_factory: VirtualNotebookFactory = JupyterNotebookFactory()
+) -> None:
     """
     Create snippets.
 
@@ -166,6 +219,11 @@ def create_snippets(topic: str,
         use_python (bool): to override kernel and language info.
                      This allows for extensions that use Python cells instead
                      of their own kernels.
+        notebook_factory (VirtualNotebookFactory): Factory for creating
+                     notebooks.  Defaults to Jupyter notebooks, which is
+                     usually what we want, but some languages don't have
+                     fully functional kernels available, so we have to
+                     have a workaround.
     """
 
     if not use_python:
@@ -178,19 +236,12 @@ def create_snippets(topic: str,
         print(f'Generating notebook for {section.title}.')
 
         # Create a new notebook w/ appropriate kernel info
-        notebook = nbf4.new_notebook()
+        notebook_factory.create()
         if use_python:
-            notebook.metadata.kernelspec = {
-                "name": 'python3',
-                "display_name": 'Python 3 (ipykernel)',
-                "language": 'python',
-            }
+            notebook_factory.set_kernel_info('python3', 'Python 3 (ipykernel)',
+                                             'python')
         else:
-            notebook.metadata.kernelspec = {
-                "name": kernel,
-                "display_name": topic,
-                "language": topic.lower(),
-            }
+            notebook_factory.set_kernel_info(kernel, topic, topic.lower())
 
         for subtopic in section.subtopics:
             print(f'\tGenerating snippet for {subtopic}')
@@ -221,17 +272,13 @@ def create_snippets(topic: str,
             #print(markdown_content)
 
             # Add a title+summary markdown cell for each subtopic
-            markdown = nbf4.new_markdown_cell(
-                f'# {subtopic}\n{markdown_content}')
-            notebook.cells.append(markdown)
+            notebook_factory.add_markdown(f'# {subtopic}\n{markdown_content}')
 
             # Add a code snippet cell for each subtopic
-            code = nbf4.new_code_cell(code_content)
-            notebook.cells.append(code)
+            notebook_factory.add_code_snippet(code_content)
 
         # Write to disk (ends up in bazel-bin)
-        with open(section.title.replace('/', ', ') + '.ipynb', 'w') as f:
-            nbf.write(notebook, f)
+        notebook_factory.save(section.title.replace('/', ', '))
 
 
 def prompt_snippets(topic: str, outline: Outline) -> None:
