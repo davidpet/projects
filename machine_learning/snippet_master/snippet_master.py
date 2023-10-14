@@ -1,5 +1,7 @@
 import sys
 import re
+import os
+import shutil
 import nbformat as nbf
 import nbformat.v4 as nbf4
 
@@ -96,6 +98,9 @@ class VirtualNotebookFactory:
                         language: str) -> None:
         pass
 
+    def create_subtopic(self, subtopic: str) -> None:
+        pass
+
     def add_markdown(self, content: str) -> None:
         pass
 
@@ -123,6 +128,9 @@ class JupyterNotebookFactory(VirtualNotebookFactory):
             "language": language,
         }
 
+    def create_subtopic(self, subtopic: str) -> None:
+        pass
+
     def add_markdown(self, content: str) -> None:
         markdown = nbf4.new_markdown_cell(content)
         self.notebook.cells.append(markdown)
@@ -134,6 +142,54 @@ class JupyterNotebookFactory(VirtualNotebookFactory):
     def save(self, name: str):
         with open(name + '.ipynb', 'w') as f:
             nbf.write(self.notebook, f)
+
+
+class CodeFileFactory(VirtualNotebookFactory):
+    """Creation of direct code files when Jupyter won't work."""
+
+    TEMP_FOLDER = 'CodeFileFactory_temp'
+
+    def __init__(self, extension: str):
+        self.extension = extension
+        self.count = 0
+        self.subtopic = ''
+
+    def __next_name(self) -> str:
+        return '{:03}'.format(self.count)
+
+    def create(self):
+        if os.path.exists(self.TEMP_FOLDER):
+            shutil.rmtree(self.TEMP_FOLDER)
+        os.mkdir(self.TEMP_FOLDER)
+
+        self.count = 0
+
+    def set_kernel_info(self, name: str, display_name: str,
+                        language: str) -> None:
+        pass
+
+    def create_subtopic(self, subtopic: str) -> None:
+        self.subtopic = subtopic
+
+    def add_markdown(self, content: str) -> None:
+        with open(
+                os.path.join(
+                    self.TEMP_FOLDER,
+                    self.__next_name() + ' - ' + self.subtopic +
+                    ' - explanation.md'), 'w') as f:
+            f.write(content)
+
+    def add_code_snippet(self, code: str) -> None:
+        with open(
+                os.path.join(
+                    self.TEMP_FOLDER,
+                    self.__next_name() + ' - ' + self.subtopic + ' - snippet.' +
+                    self.extension), 'w') as f:
+            f.write(code)
+        self.count += 1
+
+    def save(self, name: str):
+        os.rename(self.TEMP_FOLDER, name)
 
 
 def write_file(path: str, text: str) -> None:
@@ -271,6 +327,8 @@ def create_snippets(
             #print('-markdown-')
             #print(markdown_content)
 
+            notebook_factory.create_subtopic(subtopic.replace('/', ', '))
+
             # Add a title+summary markdown cell for each subtopic
             notebook_factory.add_markdown(f'# {subtopic}\n{markdown_content}')
 
@@ -318,23 +376,33 @@ def prompt_snippets(topic: str, outline: Outline) -> None:
             count = 0
 
     if count:
-        unique_kernel = (input(
-            'Does this language have its own kernel? (Y or N - default Y): ').
-                         strip().lower() or 'y') == 'y'
-        kernel = None
-        if unique_kernel:
-            kernel = input(
-                'What is the kernel to use for notebooks? (Default to i + language lowercased): '
-            ).strip()
-            if not kernel:
-                kernel = 'i' + topic.lower()
+        override_jupyter = (input(
+            'Do you need to override Jupyter notebook creation, and if so, ' +
+            'what extension should we use? (Default no override): ').strip().
+                            lower())
+        if override_jupyter:
+            kernel = None
+            unique_kernel = True  # just stop it from using Python
+        if not override_jupyter:
+            unique_kernel = (input(
+                'Does this language have its own kernel? (Y or N - default Y): '
+            ).strip().lower() or 'y') == 'y'
+            kernel = None
+            if unique_kernel:
+                kernel = input(
+                    'What is the kernel to use for notebooks? (Default to i + language lowercased): '
+                ).strip()
+                if not kernel:
+                    kernel = 'i' + topic.lower()
 
         print_section('Snippets')
         create_snippets(topic,
                         kernel,
                         outline,
                         count,
-                        use_python=not unique_kernel)
+                        use_python=not unique_kernel,
+                        notebook_factory=CodeFileFactory(override_jupyter)
+                        if override_jupyter else JupyterNotebookFactory())
 
 
 def main() -> int:
