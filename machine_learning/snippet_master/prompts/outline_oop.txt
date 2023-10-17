@@ -269,6 +269,7 @@ XIII. Standard library
   H.  Events
   I.  Observables/Reactive Programming
   J.  Time and Dates
+  K.  Random Numbers
 
 XIV. Testing (JUnit-style)
   A.  Test Class/Suite and Methods
