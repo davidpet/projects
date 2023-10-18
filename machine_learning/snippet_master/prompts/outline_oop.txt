@@ -63,6 +63,9 @@ III. Strings and Printing
   Q.  String Splitting
   R.  Sorting
   S.  Line Endings (In Literals and Relative to System)
+  T.  Case Insensitive vs. Sensitive Comparison
+  U.  Changing Case
+  V.  Reversing
 
 IV. Control Flow
   A.  if/then statements
