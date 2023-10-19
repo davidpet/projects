@@ -451,6 +451,11 @@ Requirements to Use:
 1. Possibly Improve SnippetMaster to generate things besides programming languages (eg. library examples).
 1. Add tests to SnippetMaster.
 1. Web app for SnippetMaster? (maybe not - it his the API key pretty hard)
+1. Add option to switch between GPT 3.5 or 4 (since 4 is so expensive)
+1. Fix SnippetMaster BUILD file generation (names are invalid)
+1. Fix SnipetMaster markdown title spacing and always saying "above"
+1. Make table of langauges so far and what SnippetMaster options used (and how found)
+1. More SnippetMaster languages: Lisp & Clojure (new FP outline needed), Dart, C#, Bash (scripting outline needed)
 1. Next Next Project: tax chatbot for my wife's business
 
    - at first I thought this wouldn't work because of the GPT knowledge cutoff
