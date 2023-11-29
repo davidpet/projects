@@ -66,6 +66,7 @@ III. Strings and Printing
   T.  Case Insensitive vs. Sensitive Comparison
   U.  Changing Case
   V.  Reversing
+  W.  Null Termination
 
 IV. Control Flow
   A.  if/then statements
