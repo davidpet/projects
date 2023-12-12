@@ -110,6 +110,7 @@ V. Functions
   R.  Passing by Reference (modifying a nonlocal variable passed to a function)
   S.  Const/final Arguments
   T.  Uniqueness of Method Signature (param names?  param types? overloads?)
+  U.  Implicit Return Value
 
 VI. Functional Programming
   A.  Lambdas
@@ -123,6 +124,7 @@ VI. Functional Programming
   I.  Range
   J.  Functional zip() method on 2 streams
   K.  IIFE
+  L.  Recursive Lambdas
 
 VII. Classes
   A.  Basic Syntax and Instantiation (inc. static, instance, class members, etc.)
@@ -172,6 +174,7 @@ VII. Classes
   AS.  Covariant Return Types
   AT.  Inheritance and Name Hiding of Static Members
   AU.  Hashing Members Together
+  AV.  Base Constructor Automatically Called if Ommitted?
 
 VIII. Generics/Templates
   A.  Generic Function
@@ -214,6 +217,7 @@ IX. Modules/Packages/Imports
   T.  Top-Level Enums (not in classes)
   U.  Fully-Qualified Symbol Usages Without Importing First
   V.  Dealing With Symbol Name Conflicts
+  W.  Disallowed Path/Module/Name Characters
 
 X. Docstrings
   A.  Functions
