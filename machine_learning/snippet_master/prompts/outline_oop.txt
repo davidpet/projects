@@ -42,6 +42,7 @@ II. Operators
   K.  Collection Operators
   L.  String Operators
   M.  Runtime Type/Type Equality/Type Comparison
+  N.  Behavior of Modulo, Division, and Floor With Respect to Negative Operands (each side)
 
 III. Strings and Printing
   A.  All Ways to Quote Strings
