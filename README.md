@@ -352,6 +352,7 @@ TODO: add here (using prettier and eslint)
 - For `Kaggle Titanic` run [this notebook](projects/machine_learning/kaggle_titanic/titanic.ipynb)
 - For the web app for SpaceBot, it is still under development, but there will likely be a shell script to spin up the Python server plus an Envoy proxy plus the Angular app (via ng serve).
 - For `SnippetMaster`, run `bazel run //machine_learning/snippet_master`. For now, output will be printed to the console and generated in `bazel-bin/machine_learning/snippet_master/snippet_master.runfiles/__main__`. You can manually copy the outline and/or .ipynb files to a snippets repo, for instance. It is generally ok to use ctrl-c to stop in the middle of generation. Notebooks are not written until the end of each notebook, so if you don't kill it right at that moment, it's not likely to cause a problem.
+- For `Safron`, run `bazel run //machine_learning/safron`.  This project is in development, so it doesn't do anything useful or interesting just yet.
 
 # Angular Workspace
 
