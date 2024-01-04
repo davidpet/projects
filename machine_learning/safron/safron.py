@@ -10,59 +10,66 @@ from machine_learning.common import utilities
 from machine_learning.common.openai_api import fetch_api_key, Chat, prompt, StringDictionary, GPT4_MODEL, GPT3_5_MODEL
 
 # TODO: don't pass affirmative system message into the summary phase
-# TODO: give feedback in between rounds (and maybe iterative summaries)
-# TODO: consider open-ended rounds where user decides when to terminate
+# TODO: consider open-ended rounds (w/ iterative summaries) where user decides
+#       when to terminate
 # TODO: append and prepend some stuff to filename (eg. ~ and .html)
-# TODO: factor the printing stuff into common area and test it
 # TODO: tests, docstrings, etc. after stable-ish
+
+AFFIRMATIVE_LABEL = 'Affirmative'
+NEGATIVE_LABEL = 'Negative'
+SUMMARY_LABEL = 'Summary'
+
+AFFIRMATIVE_COLOR = 'green'
+NEGATIVE_COLOR = 'red'
+SUMMARY_COLOR = 'blue'
 
 SafronOptions = namedtuple(
     'SafronOptions', ['topic', 'rounds', 'filename', 'model', 'temperature'])
 
 
-def debate(chat1: Chat, chat2: Chat, rounds: int) -> None:
-    for _ in range(rounds):
+def debate(chat1: Chat, chat2: Chat, rounds: int, file) -> None:
+    for i in range(rounds):
+        print(f'\n***ROUND {i+1} OF {rounds}***\n')
+
         pos_msg = chat1.predict_assistant_msg()
         chat2.add_user_msg(pos_msg)
+        output_debate_msg(msg=pos_msg,
+                          label=AFFIRMATIVE_LABEL,
+                          color=AFFIRMATIVE_COLOR,
+                          file=file)
+
         neg_msg = chat2.predict_assistant_msg()
         chat1.add_user_msg(neg_msg)
+        output_debate_msg(msg=neg_msg,
+                          label=NEGATIVE_LABEL,
+                          color=NEGATIVE_COLOR,
+                          file=file)
 
 
-def print_chat(chat: Chat, colorize=False, file=sys.stdout) -> None:
+def output_debate_msg(msg: str, label: str, color: str, file) -> None:
+    print(f'{colored(label, color)}:', msg)
+    print()
+
+    print(f'[{label}]\n{msg}', file=file)
+    print(file=file)
     print(file=file)
 
-    for message in chat.messages:
-        if message['role'] == 'assistant':
-            label = 'Affirmative'
-            color = 'green'
-        elif message['role'] == 'user':
-            label = 'Negative'
-            color = 'red'
-        else:
-            continue
 
-        if colorize:
-            print(f'{colored(label, color)}:', message['content'], file=file)
-        else:
-            print(f'[{label}]\n{message["content"]}\n', file=file)
-        print(file=file)
+def output_summary_msg(summary: str, file) -> None:
+    print(f'{colored("Summary", "blue")}:\n{summary}')
+    print()
+
+    print('[Summary]\n', summary, file=file)
+    print(file=file)
 
 
-def summarize_debate(chat: Chat,
-                     system: str,
-                     model: str,
-                     temperature: float,
-                     disk_file=None):
+def summarize_debate(chat: Chat, system: str, model: str, temperature: float,
+                     disk_file):
     summary = prompt(str(chat),
                      system=system,
                      model=model,
                      temperature=temperature)
-    print(f'{colored("Summary", "blue")}:\n{summary}')
-    print()
-
-    if disk_file:
-        print('\n[Summary]\n', summary, file=disk_file)
-        print(file=disk_file)
+    output_summary_msg(summary, disk_file)
 
 
 def setup_environment() -> StringDictionary | None:
@@ -125,9 +132,7 @@ def main() -> int:
                                                   temperature=temperature)
 
     with setup_output_file(filename) as file:
-        debate(affirmative_chat, negative_chat, rounds)
-        print_chat(affirmative_chat, colorize=True)
-        print_chat(affirmative_chat, colorize=False, file=file)
+        debate(affirmative_chat, negative_chat, rounds, file)
         summarize_debate(affirmative_chat,
                          messages['summary'],
                          model=model,
