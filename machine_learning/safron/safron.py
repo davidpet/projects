@@ -16,8 +16,8 @@ def debate(chat1: Chat, chat2: Chat, rounds: int) -> None:
         chat1.add_user_msg(neg_msg)
 
 
-def print_chat(chat: Chat, colorize=False) -> None:
-    print()
+def print_chat(chat: Chat, colorize=False, file=sys.stdout) -> None:
+    print(file=file)
 
     for message in chat.messages:
         if message['role'] == 'assistant':
@@ -30,15 +30,20 @@ def print_chat(chat: Chat, colorize=False) -> None:
             continue
 
         if colorize:
-            print(f'{colored(label, color)}:', message['content'])
+            print(f'{colored(label, color)}:', message['content'], file=file)
         else:
-            print(f'{label}: {message["content"]}')
-        print()
+            print(f'[{label}]\n{message["content"]}\n', file=file)
+        print(file=file)
 
 
-def summarize(chat: Chat, system: str):
+def summarize(chat: Chat, system: str, disk_file=None):
     summary = prompt(str(chat), system=system)
     print(f'{colored("Summary", "blue")}:\n{summary}')
+    print()
+
+    if disk_file:
+        print('\n[Summary]\n', summary, file=disk_file)
+        print(file=disk_file)
 
 
 def main() -> int:
@@ -60,11 +65,28 @@ def main() -> int:
     negative_chat = Chat()
     negative_chat.add_system_msg(messages['negative'].format(topic))
 
-    rounds = int(input("Enter number of rounds: ").strip())
+    rounds = int(input('Enter number of rounds: ').strip())
+    filename = input('Enter a filename: ').strip()
+    file = None
+    if filename:
+        file = open(filename, 'w')  # TODO: use 'with' properly here
+
+    # TODO: refactor this to be less taped together
+    # TODO: don't pass affirmative system message into the summary phase
+    # TODO: give feedback in between rounds (and maybe iterative summaries)
+    # TODO: consider open-ended rounds where user decides when to terminate
+    # TODO: append and prepend some stuff to filename (eg. ~ and .html)
+    # TODO: factor the printing stuff into common area and test it
+    # TODO: tests, docstrings, etc. after stable-ish
 
     debate(affirmative_chat, negative_chat, rounds)
     print_chat(affirmative_chat, colorize=True)
-    summarize(affirmative_chat, messages['summary'])
+    if file:
+        print_chat(affirmative_chat, colorize=False, file=file)
+    summarize(affirmative_chat, messages['summary'], disk_file=file)
+
+    if file:
+        file.close()
 
     return 0
 
