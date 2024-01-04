@@ -21,10 +21,10 @@ def print_chat(chat: Chat, colorize=False) -> None:
 
     for message in chat.messages:
         if message['role'] == 'assistant':
-            label = 'affirmative'
+            label = 'Affirmative'
             color = 'green'
         elif message['role'] == 'user':
-            label = 'negative'
+            label = 'Negative'
             color = 'red'
         else:
             continue
@@ -38,7 +38,7 @@ def print_chat(chat: Chat, colorize=False) -> None:
 
 def summarize(chat: Chat, system: str):
     summary = prompt(str(chat), system=system)
-    print(f'{colored("summary", "blue")}:\n{summary}')
+    print(f'{colored("Summary", "blue")}:\n{summary}')
 
 
 def main() -> int:
