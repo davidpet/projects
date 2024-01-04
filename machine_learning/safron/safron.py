@@ -78,6 +78,7 @@ def main() -> int:
     # TODO: append and prepend some stuff to filename (eg. ~ and .html)
     # TODO: factor the printing stuff into common area and test it
     # TODO: tests, docstrings, etc. after stable-ish
+    # TODO: possibly make temperature and model selectable
 
     debate(affirmative_chat, negative_chat, rounds)
     print_chat(affirmative_chat, colorize=True)
