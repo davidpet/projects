@@ -1,11 +1,23 @@
 """SAFRON - Self Argumentation for Refinement of Notions"""
 
 import sys
+from collections import namedtuple
+from io import StringIO
 
 from termcolor import colored
 
 from machine_learning.common import utilities
-from machine_learning.common.openai_api import fetch_api_key, Chat, prompt
+from machine_learning.common.openai_api import fetch_api_key, Chat, prompt, StringDictionary
+
+# TODO: don't pass affirmative system message into the summary phase
+# TODO: give feedback in between rounds (and maybe iterative summaries)
+# TODO: consider open-ended rounds where user decides when to terminate
+# TODO: append and prepend some stuff to filename (eg. ~ and .html)
+# TODO: factor the printing stuff into common area and test it
+# TODO: tests, docstrings, etc. after stable-ish
+# TODO: possibly make temperature and model selectable
+
+SafronOptions = namedtuple('SafronOptions', ['topic', 'rounds', 'filename'])
 
 
 def debate(chat1: Chat, chat2: Chat, rounds: int) -> None:
@@ -36,7 +48,7 @@ def print_chat(chat: Chat, colorize=False, file=sys.stdout) -> None:
         print(file=file)
 
 
-def summarize(chat: Chat, system: str, disk_file=None):
+def summarize_debate(chat: Chat, system: str, disk_file=None):
     summary = prompt(str(chat), system=system)
     print(f'{colored("Summary", "blue")}:\n{summary}')
     print()
@@ -46,48 +58,56 @@ def summarize(chat: Chat, system: str, disk_file=None):
         print(file=disk_file)
 
 
-def main() -> int:
-    messages = utilities.load_data_files(
+def setup_environment() -> StringDictionary | None:
+    if not fetch_api_key():
+        print('ERROR: API key not found!')
+        return None
+
+    return utilities.load_data_files(
         files={
             'affirmative': 'messages/system_affirmative.txt',
             'negative': 'messages/system_negative.txt',
             'summary': 'messages/system_summary.txt',
         })
 
-    if not fetch_api_key():
-        print('ERROR: API key not found!')
-        return 1
 
+def gather_options_from_user() -> SafronOptions:
     topic = input('Please enter debate topic: ').strip()
-
-    affirmative_chat = Chat()
-    affirmative_chat.add_system_msg(messages['affirmative'].format(topic))
-    negative_chat = Chat()
-    negative_chat.add_system_msg(messages['negative'].format(topic))
-
     rounds = int(input('Enter number of rounds: ').strip())
     filename = input('Enter a filename: ').strip()
-    file = None
+
+    return SafronOptions(topic=topic, rounds=rounds, filename=filename)
+
+
+def setup_chats(system1: str, system2: str, topic: str) -> tuple[Chat, Chat]:
+    affirmative_chat = Chat()
+    affirmative_chat.add_system_msg(system1.format(topic))
+    negative_chat = Chat()
+    negative_chat.add_system_msg(system2.format(topic))
+
+    return affirmative_chat, negative_chat
+
+
+def setup_output_file(filename: str | None):
     if filename:
-        file = open(filename, 'w')  # TODO: use 'with' properly here
+        return open(filename, 'w')
+    else:
+        return StringIO()
 
-    # TODO: refactor this to be less taped together
-    # TODO: don't pass affirmative system message into the summary phase
-    # TODO: give feedback in between rounds (and maybe iterative summaries)
-    # TODO: consider open-ended rounds where user decides when to terminate
-    # TODO: append and prepend some stuff to filename (eg. ~ and .html)
-    # TODO: factor the printing stuff into common area and test it
-    # TODO: tests, docstrings, etc. after stable-ish
-    # TODO: possibly make temperature and model selectable
 
-    debate(affirmative_chat, negative_chat, rounds)
-    print_chat(affirmative_chat, colorize=True)
-    if file:
+def main() -> int:
+    messages = setup_environment()
+    if not messages:
+        return 1
+    topic, rounds, filename = gather_options_from_user()
+    affirmative_chat, negative_chat = setup_chats(messages['affirmative'],
+                                                  messages['negative'], topic)
+
+    with setup_output_file(filename) as file:
+        debate(affirmative_chat, negative_chat, rounds)
+        print_chat(affirmative_chat, colorize=True)
         print_chat(affirmative_chat, colorize=False, file=file)
-    summarize(affirmative_chat, messages['summary'], disk_file=file)
-
-    if file:
-        file.close()
+        summarize_debate(affirmative_chat, messages['summary'], disk_file=file)
 
     return 0
 
