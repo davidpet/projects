@@ -9,7 +9,6 @@ from termcolor import colored
 from machine_learning.common import utilities
 from machine_learning.common.openai_api import fetch_api_key, Chat, prompt, StringDictionary, GPT4_MODEL, GPT3_5_MODEL
 
-# TODO: don't pass affirmative system message into the summary phase
 # TODO: consider open-ended rounds (w/ iterative summaries) where user decides
 #       when to terminate
 # TODO: append and prepend some stuff to filename (eg. ~ and .html)
@@ -65,7 +64,11 @@ def output_summary_msg(summary: str, file) -> None:
 
 def summarize_debate(chat: Chat, system: str, model: str, temperature: float,
                      disk_file):
-    summary = prompt(str(chat),
+    messages = [
+        f'{msg["role"]}: {msg["content"]}' for msg in chat.messages
+        if msg['role'] != 'system'
+    ]
+    summary = prompt(prompt='\n\n'.join(messages),
                      system=system,
                      model=model,
                      temperature=temperature)
