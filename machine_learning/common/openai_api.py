@@ -16,6 +16,9 @@ Examples = dict[str, list[StringDictionary]]
 API_KEY_VAR = 'OPENAI_API_KEY'
 API_KEY_FILE = '~/openai.env'
 
+GPT4_MODEL = 'gpt-4'
+GPT3_5_MODEL = 'gpt-3.5-turbo'
+
 
 def fetch_api_key() -> bool:
     """
@@ -111,7 +114,7 @@ def extract_delimitted_text(full_text: str, delimitter: str) -> str:
 
 def prompt(prompt: str,
            temperature: float = 0.0,
-           model: str = 'gpt-4',
+           model: str = GPT4_MODEL,
            system: str | None = None,
            input_delim: str | None = None,
            output_delim: str | None = None) -> str:
@@ -282,7 +285,7 @@ class Chat:
     temperature: float
     messages: list[str]
 
-    def __init__(self, model: str = 'gpt-4', temperature: float = 0.0):
+    def __init__(self, model: str = GPT4_MODEL, temperature: float = 0.0):
         """
         Create a new chat instance.
 

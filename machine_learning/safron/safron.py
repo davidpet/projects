@@ -7,7 +7,7 @@ from io import StringIO
 from termcolor import colored
 
 from machine_learning.common import utilities
-from machine_learning.common.openai_api import fetch_api_key, Chat, prompt, StringDictionary
+from machine_learning.common.openai_api import fetch_api_key, Chat, prompt, StringDictionary, GPT4_MODEL, GPT3_5_MODEL
 
 # TODO: don't pass affirmative system message into the summary phase
 # TODO: give feedback in between rounds (and maybe iterative summaries)
@@ -15,9 +15,9 @@ from machine_learning.common.openai_api import fetch_api_key, Chat, prompt, Stri
 # TODO: append and prepend some stuff to filename (eg. ~ and .html)
 # TODO: factor the printing stuff into common area and test it
 # TODO: tests, docstrings, etc. after stable-ish
-# TODO: possibly make temperature and model selectable
 
-SafronOptions = namedtuple('SafronOptions', ['topic', 'rounds', 'filename'])
+SafronOptions = namedtuple(
+    'SafronOptions', ['topic', 'rounds', 'filename', 'model', 'temperature'])
 
 
 def debate(chat1: Chat, chat2: Chat, rounds: int) -> None:
@@ -48,8 +48,15 @@ def print_chat(chat: Chat, colorize=False, file=sys.stdout) -> None:
         print(file=file)
 
 
-def summarize_debate(chat: Chat, system: str, disk_file=None):
-    summary = prompt(str(chat), system=system)
+def summarize_debate(chat: Chat,
+                     system: str,
+                     model: str,
+                     temperature: float,
+                     disk_file=None):
+    summary = prompt(str(chat),
+                     system=system,
+                     model=model,
+                     temperature=temperature)
     print(f'{colored("Summary", "blue")}:\n{summary}')
     print()
 
@@ -75,14 +82,25 @@ def gather_options_from_user() -> SafronOptions:
     topic = input('Please enter debate topic: ').strip()
     rounds = int(input('Enter number of rounds: ').strip())
     filename = input('Enter a filename: ').strip()
+    if input('Use GPT 4 instead of 3.5? (Default N): ').strip().lower() == 'y':
+        model = GPT4_MODEL
+    else:
+        model = GPT3_5_MODEL
+    temperature = float(
+        input('Please enter a temperature (Default 0.0): ').strip() or 0.0)
 
-    return SafronOptions(topic=topic, rounds=rounds, filename=filename)
+    return SafronOptions(topic=topic,
+                         rounds=rounds,
+                         filename=filename,
+                         model=model,
+                         temperature=temperature)
 
 
-def setup_chats(system1: str, system2: str, topic: str) -> tuple[Chat, Chat]:
-    affirmative_chat = Chat()
+def setup_chats(system1: str, system2: str, topic: str, model: str,
+                temperature: float) -> tuple[Chat, Chat]:
+    affirmative_chat = Chat(model=model, temperature=temperature)
     affirmative_chat.add_system_msg(system1.format(topic))
-    negative_chat = Chat()
+    negative_chat = Chat(model=model, temperature=temperature)
     negative_chat.add_system_msg(system2.format(topic))
 
     return affirmative_chat, negative_chat
@@ -99,15 +117,22 @@ def main() -> int:
     messages = setup_environment()
     if not messages:
         return 1
-    topic, rounds, filename = gather_options_from_user()
+    topic, rounds, filename, model, temperature = gather_options_from_user()
     affirmative_chat, negative_chat = setup_chats(messages['affirmative'],
-                                                  messages['negative'], topic)
+                                                  messages['negative'],
+                                                  topic,
+                                                  model=model,
+                                                  temperature=temperature)
 
     with setup_output_file(filename) as file:
         debate(affirmative_chat, negative_chat, rounds)
         print_chat(affirmative_chat, colorize=True)
         print_chat(affirmative_chat, colorize=False, file=file)
-        summarize_debate(affirmative_chat, messages['summary'], disk_file=file)
+        summarize_debate(affirmative_chat,
+                         messages['summary'],
+                         model=model,
+                         temperature=temperature,
+                         disk_file=file)
 
     return 0
 
