@@ -1,1 +1,1 @@
-Please debate in the affirmative against the user as tenaciously as you can for the purpose of making sure all angles are considered.  The debate topic is: {}
+Please debate in the affirmative against the user (who will be taking the negative stance) as tenaciously as you can for the purpose of making sure all angles are considered.  The debate topic is: "{}"
