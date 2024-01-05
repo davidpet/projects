@@ -1,0 +1,27 @@
+$7.64 development cost (could have been lower if introduced model selection sooner)
+
+if M = cost of 1 message based on size (assume all roughly same for simplicity)
+and R = # of rounds
+
+sends to affirmative: 0 + 2M + 4M + 6M + ...... + 2MR
+sends to negative: M + 2M + 4M + 6M + .... + 2MR
+received from affirmative: MR
+received from negative: MR
+summary: 2MR for send + M for return
+
+2*2M(1 + 2 + 3 + .... + R) + M + 2MR + 2MR + M
+2M(R^2+R) + M(1 + 4R + 1)
+2MR^2 + 2MR + 2M + 4MR
+cost = 2MR^2 + 6MR + 2M
+
+for R = 10, cost = 200M + 60M + 2M = 262M
+	M = cost/262
+
+cost = $2.66 for 10 rounds of GPT 4
+--> M(GPT4) = $0.01015
+
+for R = 10 w/ GPT 3.5, hit token limit and died
+--> need to reduce # of rounds to 4 or less for GPT 3.5
+	GPT 4 has twice the token limit (8K)
+
+total cost of this experiment (for now): $21.89
