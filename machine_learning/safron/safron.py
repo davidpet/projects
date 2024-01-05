@@ -50,7 +50,7 @@ def debate(chat1: Chat, chat2: Chat, rounds: int, file) -> None:
                           color=NEGATIVE_COLOR,
                           file=file)
 
-        print('\n***DEBATE CONCLUDED***\n')
+    print('\n***DEBATE CONCLUDED***\n')
 
 
 def output_debate_msg(msg: str, label: str, color: str, file) -> None:
