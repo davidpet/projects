@@ -1,5 +1,6 @@
 """SAFRON - Self Argumentation for Refinement of Notions"""
 
+import os
 import sys
 from collections import namedtuple
 from io import StringIO
@@ -11,10 +12,13 @@ from machine_learning.common.openai_api import fetch_api_key, Chat, prompt, Stri
 
 # TODO: consider open-ended rounds (w/ iterative summaries) where user decides
 #       when to terminate (instead of pre-choosing # rounds)
-# TODO: append and prepend some stuff to filename (eg. ~ and .txt)
+# TODO: consider preventing quotes and other special chars in topic string
+# TODO: error on invalid round number (esp. negative)
 
 # TODO: break this file apart (maybe) and unit test it (definitely)
 # TODO: finish type annotations and docstrings
+
+DEFAULT_FILE_EXTENSION = 'txt'
 
 AFFIRMATIVE_LABEL = 'Affirmative'
 NEGATIVE_LABEL = 'Negative'
@@ -45,6 +49,8 @@ def debate(chat1: Chat, chat2: Chat, rounds: int, file) -> None:
                           label=NEGATIVE_LABEL,
                           color=NEGATIVE_COLOR,
                           file=file)
+
+        print('\n***DEBATE CONCLUDED***\n')
 
 
 def output_debate_msg(msg: str, label: str, color: str, file) -> None:
@@ -120,16 +126,29 @@ def setup_chats(system1: str, system2: str, topic: str, model: str,
 
 def setup_output_file(filename: str | None):
     if filename:
-        return open(filename, 'w')
+        if not os.path.splitext(filename)[1]:
+            filename = filename + '.' + DEFAULT_FILE_EXTENSION
+        return open(os.path.expanduser(filename), 'w')
     else:
         return StringIO()
+
+
+def write_metadata(file, options: SafronOptions) -> None:
+    print('Topic:', options.topic, file=file)
+    print('Rounds:', options.rounds, file=file)
+    print('GPT Model:', options.model, file=file)
+    print('Temperature:', options.temperature, file=file)
+    print('Filename:', options.filename, file=file)
+
+    print(file=file)
 
 
 def main() -> int:
     messages = setup_environment()
     if not messages:
         return 1
-    topic, rounds, filename, model, temperature = gather_options_from_user()
+    options = gather_options_from_user()
+    topic, rounds, filename, model, temperature = options
     affirmative_chat, negative_chat = setup_chats(messages['affirmative'],
                                                   messages['negative'],
                                                   topic,
@@ -137,6 +156,7 @@ def main() -> int:
                                                   temperature=temperature)
 
     with setup_output_file(filename) as file:
+        write_metadata(file, options)
         debate(affirmative_chat, negative_chat, rounds, file)
         summarize_debate(affirmative_chat,
                          messages['summary'],

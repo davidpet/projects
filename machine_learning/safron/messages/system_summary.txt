@@ -1,3 +1,7 @@
-Please summarize the key points of each side of this debate in a concise bulleted list in 1 section for affirmative and 1 for negative.  Pay special attention to any points that shifted or became more convincing closer to the end of the conversation, to account for any new insights raised by the debate.
+Please summarize this debate in 3 sections, with each section a list of concise bullet points:
+1. main points from the affirmative argument
+2. main points from the negative argument
+3. any new insights or shifts in viewpoint that happened as a result of the debate as it went on
 
-{}
+The text of the debate is:
+"{}"
