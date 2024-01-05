@@ -9,10 +9,14 @@ from termcolor import colored
 from machine_learning.common import utilities
 from machine_learning.common.openai_api import fetch_api_key, Chat, prompt, StringDictionary, GPT4_MODEL, GPT3_5_MODEL
 
+# TODO: fix GPT 3.5 reversing polarity of arguments (reword system messages)
+# TODO: fix GPT 3.5 not separating the arguments in summary like GPT 4 does
 # TODO: consider open-ended rounds (w/ iterative summaries) where user decides
-#       when to terminate
-# TODO: append and prepend some stuff to filename (eg. ~ and .html)
-# TODO: tests, docstrings, etc. after stable-ish
+#       when to terminate (instead of pre-choosing # rounds)
+# TODO: append and prepend some stuff to filename (eg. ~ and .txt)
+
+# TODO: break this file apart (maybe) and unit test it (definitely)
+# TODO: finish type annotations and docstrings
 
 AFFIRMATIVE_LABEL = 'Affirmative'
 NEGATIVE_LABEL = 'Negative'
