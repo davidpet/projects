@@ -15,6 +15,10 @@ from machine_learning.common.openai_api import fetch_api_key, Chat, prompt, Stri
 # TODO: consider preventing quotes and other special chars in topic string
 # TODO: error on invalid round number (esp. negative)
 # TODO: consider debater personality choices (eg. angry vs. respectful etc.)
+# TODO: consider having another LLM pass to evaluate the usefulness of
+#       each round (eg. with a score 1-10 of how much each round added to the
+#       discussion)
+
 # TODO: break this file apart (maybe) and unit test it (definitely)
 # TODO: finish type annotations and docstrings
 
