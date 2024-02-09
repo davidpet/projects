@@ -178,7 +178,7 @@ NOTE: technically the grpcio-tools part is not needed to run that api but is nee
 1. Create a conda environment with Python 3.11.
 1. If going to generate Jupyter notebooks (eg. via SnippetMaster), `conda install jupyter` (if didn't already do it from TensorFlow setup).
 1. `pip install termcolor`
-1. `pip install python_dotnev`
+1. `pip install python_dotenv`
 1. `pip install openai`
 1. If on Mac, and you already installed TensorFlow for GPU, make sure to fix the damaged grpcio and protobuf libraries as described in that setup above.
 1. `conda install grpcio-tools`
