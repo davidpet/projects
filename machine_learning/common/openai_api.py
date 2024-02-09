@@ -4,7 +4,7 @@ from typing import Callable, Protocol, Any
 import os
 
 import dotenv
-import openai
+from openai import OpenAI
 
 from machine_learning.common import utilities
 
@@ -18,6 +18,8 @@ API_KEY_FILE = '~/openai.env'
 
 GPT4_MODEL = 'gpt-4'
 GPT3_5_MODEL = 'gpt-3.5-turbo'
+
+client: OpenAI | None = None
 
 
 def fetch_api_key() -> bool:
@@ -35,12 +37,17 @@ def fetch_api_key() -> bool:
     Returns:
         bool: true if succeeds.
     """
+    global client
 
-    openai.api_key = os.getenv(API_KEY_VAR)
-    if openai.api_key is None:
+    api_key = os.getenv(API_KEY_VAR)
+    if api_key is None:
         dotenv.load_dotenv(os.path.expanduser(API_KEY_FILE))
-        openai.api_key = os.getenv(API_KEY_VAR)
-    return openai.api_key is not None
+        api_key = os.getenv(API_KEY_VAR)
+    if api_key is None:
+        return False
+
+    client = OpenAI(api_key=api_key)
+    return True
 
 
 def load_prompt_injection_instructions() -> str:
@@ -149,10 +156,10 @@ def prompt(prompt: str,
         'role': 'user',
         'content': delimit_text(prompt, input_delim),
     })
-    response = openai.ChatCompletion.create(model=model,
-                                            messages=messages,
-                                            temperature=temperature)
-    response_text = response.choices[0].message['content']
+    response = client.chat.completions.create(model=model,
+                                              messages=messages,
+                                              temperature=temperature)
+    response_text = response.choices[0].message.content
     if output_delim:
         response_text = extract_delimitted_text(response_text, output_delim)
 
@@ -180,13 +187,13 @@ class ModerationResponse(Protocol):
 # fn to extract the 'flagged' field from a moderation response from the server.
 # TODO: find out why I treated it as a dictionary instead of an object
 #       (I don't remember and it looks weird).
-moderation_flagged = lambda m: m['flagged']
+moderation_flagged = lambda m: m.flagged
 # fn to extract the 'category_scores' field from a moderation response from
 # the server.
-moderation_scores = lambda m: m['category_scores']
+moderation_scores = lambda m: m.category_scores
 # fn to extract the 'categories' field from a moderation response from the
 # server.
-moderation_categories = lambda m: m['categories']
+moderation_categories = lambda m: m.categories
 
 
 def moderation(input: str,
@@ -208,8 +215,8 @@ def moderation(input: str,
               By default, assume a `ModerationResponse` object.
     """
 
-    response = openai.Moderation.create(input=input)
-    output = response['results'][0]
+    response = client.moderations.create(input=input)
+    output = response.results[0]
 
     if fn is None:
         return output
@@ -409,11 +416,11 @@ class Chat:
             str: the assistant message from the server
         """
 
-        response = openai.ChatCompletion.create(model=self.model,
-                                                temperature=self.temperature,
-                                                messages=self.messages)
+        response = client.chat.completions.create(model=self.model,
+                                                  temperature=self.temperature,
+                                                  messages=self.messages)
         best_response = response.choices[0]
-        next_msg = best_response.message['content']
+        next_msg = best_response.message.content
         if output_delim:
             next_msg = extract_delimitted_text(next_msg, output_delim)
 

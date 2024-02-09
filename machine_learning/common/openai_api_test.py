@@ -6,6 +6,7 @@ from unittest.mock import patch
 import dotenv
 import os
 import openai
+from openai_api import OpenAI
 
 from machine_learning.common import openai_api
 
@@ -31,7 +32,9 @@ class MockChatCompletionCreate:
             text = returnValue
             returnValue = DynamicObject()
             returnValue.choices = [DynamicObject()]
-            returnValue.choices[0].message = {'content': text}
+            message = DynamicObject()
+            message.content = text
+            returnValue.choices[0].message = message
         self.returnValue = returnValue
 
     def create(self, model, messages, temperature):
@@ -57,6 +60,16 @@ class MockModerationCreate:
 
 class OpenAIAPITests(unittest.TestCase):
     """Tests for openai_api.py"""
+
+    def call_with_fake_client(self, fn):
+        """Mocks the client/api_key in openai_api."""
+
+        try:
+            openai_api.client = OpenAI(api_key=1)
+            response = fn()
+        finally:
+            openai_api.client = None
+        return response
 
     def __init__(self, methodName='runTest'):
         super().__init__(methodName)
@@ -87,16 +100,16 @@ class OpenAIAPITests(unittest.TestCase):
             with patch('dotenv.load_dotenv', new=fake_load_dotenv):
                 # Save and restore whatever is already there to avoid leaking
                 # test state.
-                old_api_key = openai.api_key
+                old_client = openai_api.client
                 try:
                     result = openai_api.fetch_api_key()
-                    fetched_api_key = openai.api_key
+                    fetched_client = openai_api.client
                 finally:
-                    openai.api_key = old_api_key
+                    openai_api.client = old_client
 
         self.assertEqual(loaded_variables, {'OPENAI_API_KEY'})
         self.assertEqual(loaded_path, os.path.expanduser('~/openai.env'))
-        self.assertEqual(fetched_api_key, API_KEY)
+        self.assertEqual(fetched_client.api_key, API_KEY)
         self.assertTrue(result)
 
     def test_fetch_api_key_missing_env_file(self):
@@ -124,16 +137,16 @@ class OpenAIAPITests(unittest.TestCase):
             with patch('dotenv.load_dotenv', new=fake_load_dotenv):
                 # Save and restore whatever is already there to avoid leaking
                 # test state.
-                old_api_key = openai.api_key
+                old_client = openai_api.client
                 try:
                     result = openai_api.fetch_api_key()
-                    fetched_api_key = openai.api_key
+                    fetched_client = openai_api.client
                 finally:
-                    openai.api_key = old_api_key
+                    openai_api.client = old_client
 
         self.assertEqual(loaded_variables, {'OPENAI_API_KEY'})
         self.assertEqual(loaded_path, os.path.expanduser('~/openai.env'))
-        self.assertEqual(fetched_api_key, None)
+        self.assertEqual(fetched_client, None)
         self.assertFalse(result)
 
     def test_fetch_api_key_variable_override(self):
@@ -161,16 +174,16 @@ class OpenAIAPITests(unittest.TestCase):
             with patch('dotenv.load_dotenv', new=fake_load_dotenv):
                 # Save and restore whatever is already there to avoid leaking
                 # test state.
-                old_api_key = openai.api_key
+                old_client = openai_api.client
                 try:
                     result = openai_api.fetch_api_key()
-                    fetched_api_key = openai.api_key
+                    fetched_client = openai_api.client
                 finally:
-                    openai.api_key = old_api_key
+                    openai_api.client = old_client
 
         self.assertEqual(loaded_variables, {'OPENAI_API_KEY'})
         self.assertEqual(loaded_path, None)
-        self.assertEqual(fetched_api_key, API_KEY)
+        self.assertEqual(fetched_client.api_key, API_KEY)
         self.assertTrue(result)
 
     def test_load_prompt_injection_instructions(self):
@@ -221,8 +234,10 @@ class OpenAIAPITests(unittest.TestCase):
     def test_prompt(self):
         mock = MockChatCompletionCreate('Hello, I am an AI.')
 
-        with patch('openai.ChatCompletion.create', new=mock.create):
-            response = openai_api.prompt('Hello, I am a human.')
+        with patch('openai.resources.chat.Completions.create',
+                   new=mock.create):
+            response = self.call_with_fake_client(
+                lambda: openai_api.prompt('Hello, I am a human.'))
 
         self.assertEqual(response, 'Hello, I am an AI.')
         self.assertEqual(mock.temperature, 0.0)
@@ -235,9 +250,10 @@ class OpenAIAPITests(unittest.TestCase):
     def test_prompt_temperature(self):
         mock = MockChatCompletionCreate('Hello, I am an AI.')
 
-        with patch('openai.ChatCompletion.create', new=mock.create):
-            response = openai_api.prompt('Hello, I am a human.',
-                                         temperature=0.5)
+        with patch('openai.resources.chat.Completions.create',
+                   new=mock.create):
+            response = self.call_with_fake_client(lambda: openai_api.prompt(
+                'Hello, I am a human.', temperature=0.5))
 
         self.assertEqual(response, 'Hello, I am an AI.')
         self.assertEqual(mock.temperature, 0.5)
@@ -250,8 +266,10 @@ class OpenAIAPITests(unittest.TestCase):
     def test_prompt_model(self):
         mock = MockChatCompletionCreate('Hello, I am an AI.')
 
-        with patch('openai.ChatCompletion.create', new=mock.create):
-            response = openai_api.prompt('Hello, I am a human.', model='T')
+        with patch('openai.resources.chat.Completions.create',
+                   new=mock.create):
+            response = self.call_with_fake_client(
+                lambda: openai_api.prompt('Hello, I am a human.', model='T'))
 
         self.assertEqual(response, 'Hello, I am an AI.')
         self.assertEqual(mock.temperature, 0.0)
@@ -264,43 +282,48 @@ class OpenAIAPITests(unittest.TestCase):
     def test_prompt_system_msg(self):
         mock = MockChatCompletionCreate('Hello, I am an AI.')
 
-        with patch('openai.ChatCompletion.create', new=mock.create):
-            response = openai_api.prompt(
+        with patch('openai.resources.chat.Completions.create',
+                   new=mock.create):
+            response = self.call_with_fake_client(lambda: openai_api.prompt(
                 'Hello, I am a human.',
-                system='Pretend you believe he is a human.')
+                system='Pretend you believe he is a human.'))
 
         self.assertEqual(response, 'Hello, I am an AI.')
         self.assertEqual(mock.temperature, 0.0)
         self.assertEqual(mock.model, 'gpt-4')
-        self.assertEqual(mock.messages, [{
-            'role': 'system',
-            'content': 'Pretend you believe he is a human.',
-        }, {
-            'role': 'user',
-            'content': 'Hello, I am a human.',
-        }])
+        self.assertEqual(mock.messages,
+                         [{
+                             'role': 'system',
+                             'content': 'Pretend you believe he is a human.',
+                         }, {
+                             'role': 'user',
+                             'content': 'Hello, I am a human.',
+                         }])
 
     def test_prompt_input_delim(self):
         mock = MockChatCompletionCreate('Hello, I am an AI.')
 
-        with patch('openai.ChatCompletion.create', new=mock.create):
-            response = openai_api.prompt('Hello, I am a human.',
-                                         input_delim="@@@")
+        with patch('openai.resources.chat.Completions.create',
+                   new=mock.create):
+            response = self.call_with_fake_client(lambda: openai_api.prompt(
+                'Hello, I am a human.', input_delim="@@@"))
 
         self.assertEqual(response, 'Hello, I am an AI.')
         self.assertEqual(mock.temperature, 0.0)
         self.assertEqual(mock.model, 'gpt-4')
-        self.assertEqual(mock.messages, [{
-            'role': 'user',
-            'content': '@@@Hello, I am a human.@@@'
-        }])
+        self.assertEqual(mock.messages,
+                         [{
+                             'role': 'user',
+                             'content': '@@@Hello, I am a human.@@@'
+                         }])
 
     def test_prompt_output_delim(self):
         mock = MockChatCompletionCreate('Hello, I am @@@an AI@@@.')
 
-        with patch('openai.ChatCompletion.create', new=mock.create):
-            response = openai_api.prompt('Hello, I am a human.',
-                                         output_delim="@@@")
+        with patch('openai.resources.chat.Completions.create',
+                   new=mock.create):
+            response = self.call_with_fake_client(lambda: openai_api.prompt(
+                'Hello, I am a human.', output_delim="@@@"))
 
         self.assertEqual(response, 'an AI')
         self.assertEqual(mock.temperature, 0.0)
@@ -313,9 +336,10 @@ class OpenAIAPITests(unittest.TestCase):
     def test_prompt_output_delim_trailing(self):
         mock = MockChatCompletionCreate('Hello, I am @@@an AI.')
 
-        with patch('openai.ChatCompletion.create', new=mock.create):
-            response = openai_api.prompt('Hello, I am a human.',
-                                         output_delim="@@@")
+        with patch('openai.resources.chat.Completions.create',
+                   new=mock.create):
+            response = self.call_with_fake_client(lambda: openai_api.prompt(
+                'Hello, I am a human.', output_delim="@@@"))
 
         self.assertEqual(response, 'an AI.')
         self.assertEqual(mock.temperature, 0.0)
@@ -328,9 +352,10 @@ class OpenAIAPITests(unittest.TestCase):
     def test_prompt_output_delim_missing(self):
         mock = MockChatCompletionCreate('Hello, I am an AI.')
 
-        with patch('openai.ChatCompletion.create', new=mock.create):
-            response = openai_api.prompt('Hello, I am a human.',
-                                         output_delim="@@@")
+        with patch('openai.resources.chat.Completions.create',
+                   new=mock.create):
+            response = self.call_with_fake_client(lambda: openai_api.prompt(
+                'Hello, I am a human.', output_delim="@@@"))
 
         self.assertEqual(response, '')
         self.assertEqual(mock.temperature, 0.0)
@@ -343,79 +368,89 @@ class OpenAIAPITests(unittest.TestCase):
     def test_prompt_combination(self):
         mock = MockChatCompletionCreate('Hello, I am an @@@AI@@@.')
 
-        with patch('openai.ChatCompletion.create', new=mock.create):
-            response = openai_api.prompt(
+        with patch('openai.resources.chat.Completions.create',
+                   new=mock.create):
+            response = self.call_with_fake_client(lambda: openai_api.prompt(
                 'Hello, I am a human.',
                 model='T',
                 temperature=1.0,
                 system='Pretend you believe he is a human.',
                 input_delim='###',
-                output_delim='@@@')
+                output_delim='@@@'))
 
         self.assertEqual(response, 'AI')
         self.assertEqual(mock.temperature, 1.0)
         self.assertEqual(mock.model, 'T')
-        self.assertEqual(mock.messages, [{
-            'role': 'system',
-            'content': 'Pretend you believe he is a human.',
-        }, {
-            'role': 'user',
-            'content': '###Hello, I am a human.###',
-        }])
+        self.assertEqual(mock.messages,
+                         [{
+                             'role': 'system',
+                             'content': 'Pretend you believe he is a human.',
+                         }, {
+                             'role': 'user',
+                             'content': '###Hello, I am a human.###',
+                         }])
 
     def test_moderation(self):
-        mockResponse = {'results': [DynamicObject()]}
-        mockResponse['results'][0].flagged = True
-        mockResponse['results'][0].categories = {'cat1': True, 'cat2': False}
-        mockResponse['results'][0].category_scores = {'cat1': 0.8, 'cat2': 0.3}
+        mockResponse = DynamicObject()
+        mockResponse.results = [DynamicObject()]
+        mockResponse.results[0].flagged = True
+        mockResponse.results[0].categories = {'cat1': True, 'cat2': False}
+        mockResponse.results[0].category_scores = {'cat1': 0.8, 'cat2': 0.3}
         mock = MockModerationCreate(mockResponse)
 
-        with patch('openai.Moderation.create', new=mock.create):
-            response = openai_api.moderation('Some bad stuff')
+        with patch('openai.resources.Moderations.create', new=mock.create):
+            response = self.call_with_fake_client(
+                lambda: openai_api.moderation('Some bad stuff'))
 
-        self.assertEqual(response, mockResponse['results'][0])
+        self.assertEqual(response, mockResponse.results[0])
         self.assertEqual(mock.input, 'Some bad stuff')
 
     def test_moderation_with_flagged_fn(self):
-        mockResponse = {'results': [DynamicObject()]}
-        mockResponse['results'][0].flagged = True
-        mockResponse['results'][0].categories = {'cat1': True, 'cat2': False}
-        mockResponse['results'][0].category_scores = {'cat1': 0.8, 'cat2': 0.3}
+        mockResponse = DynamicObject()
+        mockResponse.results = [DynamicObject()]
+        mockResponse.results[0].flagged = True
+        mockResponse.results[0].categories = {'cat1': True, 'cat2': False}
+        mockResponse.results[0].category_scores = {'cat1': 0.8, 'cat2': 0.3}
         mock = MockModerationCreate(mockResponse)
 
-        with patch('openai.Moderation.create', new=mock.create):
-            response = openai_api.moderation('Some bad stuff',
-                                             fn=openai_api.moderation_flagged)
+        with patch('openai.resources.Moderations.create', new=mock.create):
+            response = self.call_with_fake_client(
+                lambda: openai_api.moderation(
+                    'Some bad stuff', fn=openai_api.moderation_flagged))
 
         self.assertEqual(response, True)
         self.assertEqual(mock.input, 'Some bad stuff')
 
     def test_moderation_with_scores_fn(self):
-        mockResponse = {'results': [DynamicObject()]}
-        mockResponse['results'][0].flagged = True
-        mockResponse['results'][0].categories = {'cat1': True, 'cat2': False}
-        mockResponse['results'][0].category_scores = {'cat1': 0.8, 'cat2': 0.3}
+        mockResponse = DynamicObject()
+        mockResponse.results = [DynamicObject()]
+        mockResponse.results[0].flagged = True
+        mockResponse.results[0].categories = {'cat1': True, 'cat2': False}
+        mockResponse.results[0].category_scores = {'cat1': 0.8, 'cat2': 0.3}
         mock = MockModerationCreate(mockResponse)
 
-        with patch('openai.Moderation.create', new=mock.create):
-            response = openai_api.moderation('Some bad stuff',
-                                             fn=openai_api.moderation_scores)
+        with patch('openai.resources.Moderations.create', new=mock.create):
+            response = self.call_with_fake_client(
+                lambda: openai_api.moderation('Some bad stuff',
+                                              fn=openai_api.moderation_scores))
 
-        self.assertEqual(response, mockResponse['results'][0].category_scores)
+        self.assertEqual(response, mockResponse.results[0].category_scores)
         self.assertEqual(mock.input, 'Some bad stuff')
 
     def test_moderation_with_categories_fn(self):
-        mockResponse = {'results': [DynamicObject()]}
-        mockResponse['results'][0].flagged = True
-        mockResponse['results'][0].categories = {'cat1': True, 'cat2': False}
-        mockResponse['results'][0].category_scores = {'cat1': 0.8, 'cat2': 0.3}
+        mockResponse = DynamicObject()
+        mockResponse.results = [DynamicObject()]
+        mockResponse.results[0].flagged = True
+        mockResponse.results[0].categories = {'cat1': True, 'cat2': False}
+        mockResponse.results[0].category_scores = {'cat1': 0.8, 'cat2': 0.3}
         mock = MockModerationCreate(mockResponse)
 
-        with patch('openai.Moderation.create', new=mock.create):
-            response = openai_api.moderation(
-                'Some bad stuff', fn=openai_api.moderation_categories)
+        with patch('openai.resources.Moderations.create', new=mock.create):
+            response = self.call_with_fake_client(
+                lambda: openai_api.moderation(
+                    'Some bad stuff', fn=openai_api.moderation_categories))
 
-        self.assertEqual(response, mockResponse['results'][0].categories)
+        self.assertEqual(response, mockResponse.results[0].categories)
         self.assertEqual(mock.input, 'Some bad stuff')
 
     def test_meta_prompt_with_defaults(self):
@@ -434,22 +469,23 @@ class OpenAIAPITests(unittest.TestCase):
             ]
         }
 
-        with patch('openai.ChatCompletion.create', new=mock.create):
-            response = openai_api.meta_prompt(
-                user_msg='I am a user.',
-                meta_msg='Take a look at this system message: {system}',
-                system_msg='I am the system.',
-                examples=examples)
+        with patch('openai.resources.chat.Completions.create',
+                   new=mock.create):
+            response = self.call_with_fake_client(
+                lambda: openai_api.meta_prompt(
+                    user_msg='I am a user.',
+                    meta_msg='Take a look at this system message: {system}',
+                    system_msg='I am the system.',
+                    examples=examples))
 
         self.assertEqual(response, 'response text')
         self.assertEqual(mock.model, 'gpt-4')
         self.assertEqual(mock.temperature, 0.0)
         self.assertEqual(mock.messages, [
             {
-                'role':
-                    'system',
+                'role': 'system',
                 'content':
-                    'Take a look at this system message: I am the system.'
+                'Take a look at this system message: I am the system.'
             },
             *(examples['messages']),
             {
@@ -473,24 +509,25 @@ class OpenAIAPITests(unittest.TestCase):
             ]
         }
 
-        with patch('openai.ChatCompletion.create', new=mock.create):
-            response = openai_api.meta_prompt(
-                user_msg='I am a user.',
-                meta_msg='Take a look at this system message: {system}',
-                system_msg='I am the system.',
-                examples=examples,
-                output_delim='@@@',
-                input_delim='///')
+        with patch('openai.resources.chat.Completions.create',
+                   new=mock.create):
+            response = self.call_with_fake_client(
+                lambda: openai_api.meta_prompt(
+                    user_msg='I am a user.',
+                    meta_msg='Take a look at this system message: {system}',
+                    system_msg='I am the system.',
+                    examples=examples,
+                    output_delim='@@@',
+                    input_delim='///'))
 
         self.assertEqual(response, 'response text')
         self.assertEqual(mock.model, 'gpt-4')
         self.assertEqual(mock.temperature, 0.0)
         self.assertEqual(mock.messages, [
             {
-                'role':
-                    'system',
+                'role': 'system',
                 'content':
-                    'Take a look at this system message: I am the system.'
+                'Take a look at this system message: I am the system.'
             },
             *(examples['messages']),
             {
@@ -514,23 +551,24 @@ class OpenAIAPITests(unittest.TestCase):
             ]
         }
 
-        with patch('openai.ChatCompletion.create', new=mock.create):
-            response = openai_api.meta_prompt(
-                user_msg='I am a user.',
-                meta_msg='Take a look at this system message: {system}',
-                system_msg='I am the system.',
-                examples=examples,
-                fn=openai_api.meta_prompt_y)
+        with patch('openai.resources.chat.Completions.create',
+                   new=mock.create):
+            response = self.call_with_fake_client(
+                lambda: openai_api.meta_prompt(
+                    user_msg='I am a user.',
+                    meta_msg='Take a look at this system message: {system}',
+                    system_msg='I am the system.',
+                    examples=examples,
+                    fn=openai_api.meta_prompt_y))
 
         self.assertEqual(response, False)
         self.assertEqual(mock.model, 'gpt-4')
         self.assertEqual(mock.temperature, 0.0)
         self.assertEqual(mock.messages, [
             {
-                'role':
-                    'system',
+                'role': 'system',
                 'content':
-                    'Take a look at this system message: I am the system.'
+                'Take a look at this system message: I am the system.'
             },
             *(examples['messages']),
             {
@@ -554,23 +592,24 @@ class OpenAIAPITests(unittest.TestCase):
             ]
         }
 
-        with patch('openai.ChatCompletion.create', new=mock.create):
-            response = openai_api.meta_prompt(
-                user_msg='I am a user.',
-                meta_msg='Take a look at this system message: {system}',
-                system_msg='I am the system.',
-                examples=examples,
-                fn=openai_api.meta_prompt_y)
+        with patch('openai.resources.chat.Completions.create',
+                   new=mock.create):
+            response = self.call_with_fake_client(
+                lambda: openai_api.meta_prompt(
+                    user_msg='I am a user.',
+                    meta_msg='Take a look at this system message: {system}',
+                    system_msg='I am the system.',
+                    examples=examples,
+                    fn=openai_api.meta_prompt_y))
 
         self.assertEqual(response, True)
         self.assertEqual(mock.model, 'gpt-4')
         self.assertEqual(mock.temperature, 0.0)
         self.assertEqual(mock.messages, [
             {
-                'role':
-                    'system',
+                'role': 'system',
                 'content':
-                    'Take a look at this system message: I am the system.'
+                'Take a look at this system message: I am the system.'
             },
             *(examples['messages']),
             {
@@ -643,7 +682,8 @@ class OpenAIAPITests(unittest.TestCase):
         chat = openai_api.Chat()
         response = None
 
-        with patch('openai.ChatCompletion.create', new=mock.create):
+        with patch('openai.resources.chat.Completions.create',
+                   new=mock.create):
             chat.add_msg(role='system', msg='I am the system.')
             chat.add_msg(role='system',
                          msg='I am the delimitted system.',
@@ -674,7 +714,8 @@ class OpenAIAPITests(unittest.TestCase):
             chat.add_assistant_msg("I am a delimitted agent.",
                                    input_delim='@@@')
 
-            response = chat.predict_assistant_msg()
+            response = self.call_with_fake_client(
+                lambda: chat.predict_assistant_msg())
             chat.add_user_msg("Good to know!")
 
         self.assertEqual(response, 'Hello, I am an AI.')
@@ -691,8 +732,10 @@ class OpenAIAPITests(unittest.TestCase):
         chat = openai_api.Chat(model='T', temperature=1.0)
         response = None
 
-        with patch('openai.ChatCompletion.create', new=mock.create):
-            response = chat.predict_assistant_msg(output_delim='@@@')
+        with patch('openai.resources.chat.Completions.create',
+                   new=mock.create):
+            response = self.call_with_fake_client(
+                lambda: chat.predict_assistant_msg(output_delim='@@@'))
 
         self.assertEqual(response, 'AI')
         self.assertEqual(mock.model, 'T')
