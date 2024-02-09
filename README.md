@@ -179,7 +179,8 @@ NOTE: technically the grpcio-tools part is not needed to run that api but is nee
 1. If going to generate Jupyter notebooks (eg. via SnippetMaster), `conda install jupyter` (if didn't already do it from TensorFlow setup).
 1. `pip install termcolor`
 1. `pip install python_dotenv`
-1. `pip install openai`
+1. `pip install openai==0.28`
+  We have to restrict the version for now because a recent breaking change was  made that I haven't corrected for.
 1. If on Mac, and you already installed TensorFlow for GPU, make sure to fix the damaged grpcio and protobuf libraries as described in that setup above.
 1. `conda install grpcio-tools`
    This will install grpcio and protobuf as well if you don't have them yet.
@@ -436,6 +437,7 @@ Requirements to Use:
 
 # ToDo
 
+1. Update openai api version and APIs used (1.0.0 and above breaks the APIs)
 1. Find all ToDo items throughout the repos and consolidate and/or monitor with some kind of automation.
 
 - in the short term, the most important ones are in the BUILD file for SpaceBot
