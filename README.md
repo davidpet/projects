@@ -479,6 +479,8 @@ Requirements to Use:
    - horizontal snippet generator (considering SnippetMaster to be vertical)
      - eg. cmopare what inheriting interface looks like in a list of languages
 
+   - Alien Blaster remake (Zazzo the alien, trash talking you with AI based on gameplay)
+
 1. Figure out how to make OpenMusic paths system independent
 1. See if getting Lisp and OM into Bazel is desirable and feasible
 
