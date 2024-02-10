@@ -484,3 +484,4 @@ Requirements to Use:
    - also make Lisp snippets
 
 1. Improve the mocking in openai_api_test.py (has a rough set of fixes for the openai 1.0.0 migration)
+1. Move from grpc to http via Flask to simplify the client/server communication in SpaceBot (and remove bazel dependencies including from the workspace)

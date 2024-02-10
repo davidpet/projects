@@ -121,7 +121,7 @@ def extract_delimitted_text(full_text: str, delimitter: str) -> str:
 
 def prompt(prompt: str,
            temperature: float = 0.0,
-           model: str = GPT4_MODEL,
+           model: str = GPT3_5_MODEL,
            system: str | None = None,
            input_delim: str | None = None,
            output_delim: str | None = None) -> str:
@@ -292,7 +292,7 @@ class Chat:
     temperature: float
     messages: list[str]
 
-    def __init__(self, model: str = GPT4_MODEL, temperature: float = 0.0):
+    def __init__(self, model: str = GPT3_5_MODEL, temperature: float = 0.0):
         """
         Create a new chat instance.
 
