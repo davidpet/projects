@@ -58,7 +58,7 @@ Each time you need to create/re-create a conda environment:
    - grpcio
    - protobuf
 
-1. Take note of grpcio and protobuf versions because due to an issue with how the packages are set up, we will have to restore them later:
+1. `Possibly deprecated: left in case problem recurs:` Take note of grpcio and protobuf versions because due to an issue with how the packages are set up, we will have to restore them later:
 
    `conda list`
 
@@ -68,7 +68,7 @@ Each time you need to create/re-create a conda environment:
 
    As a side effect of this, grpcio and protobuf get upgraded to later versions, but via pip, which means they're not built for M1 anymore and will fail if used. You have to do some extra work to restore them to a working state. You can see the issue by running `python3 -m grpc` - if grpcio is working correctly, you should only see an error about importing modules, rather than a C++ compilation error, which is what you get when it's not built for M1.
 
-1. Restore grpcio and protobuf to a working state. In this example, I assumed two specific versions of these libraries based on last time I did this. You should adjust based on the versions you noted from `conda list` above.
+1. `Possibly deprecated: left in case problem recurs:` Restore grpcio and protobuf to a working state. In this example, I assumed two specific versions of these libraries based on last time I did this. You should adjust based on the versions you noted from `conda list` above.
 
    `pip uninstall grpcio protobuf`  
    `conda install protobuf==3.19.6 grpcio==1.46.3`  
@@ -83,6 +83,8 @@ Each time you need to create/re-create a conda environment:
 ## Windows
 
 ### CUDA+Conda Environment
+
+NOTE: Windows GPU support is gone as of TF 2.11, but you stil need to do the driver part of the setup to support Linux/WSL.
 
 1. Update your video driver.
 
