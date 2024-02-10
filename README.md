@@ -448,6 +448,7 @@ Requirements to Use:
      - include more chat context
      - semantic encapsulation (semantic containerization?) - have the AI translate the chat to a story and then write more of the story, then turn back into a chat
      - break the detection into smaller steps with a rubric-like structure and aggregate
+     - give the alien a name and personality profile instead of just dry instructions
 
 1. Possibly Improve SnippetMaster to generate things besides programming languages (eg. library examples).
 1. Add tests to SnippetMaster.
@@ -485,3 +486,4 @@ Requirements to Use:
 
 1. Improve the mocking in openai_api_test.py (has a rough set of fixes for the openai 1.0.0 migration)
 1. Move from grpc to http via Flask to simplify the client/server communication in SpaceBot (and remove bazel dependencies including from the workspace)
+1. Put in a diagnostic mode for SpaceBot so can see which responses come from the main LLM vs. moderation vs. injection detection
